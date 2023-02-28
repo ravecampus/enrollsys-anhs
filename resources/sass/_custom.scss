@@ -1,0 +1,58 @@
+.errors-material{
+    color:#cf1e1e;
+    font-size: 12px;
+}
+.fm-body {
+    display: none; 
+    position: fixed; 
+    z-index: 1999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(194, 194, 194, 0.356);
+}
+
+.fm-content {
+    background-color: #00635a;
+    margin: 15% auto; 
+    padding: 20px;
+    color: #ffffff;
+    border: 1px solid rgb(59, 59, 59);
+    width: 30%; 
+}
+.hidden {
+    display: none !important;
+}
+.login-content{
+    .registration-form{
+        min-width: 650px;
+        .login-head {
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+    }
+}
+
+.login-card{
+    min-width: 350px;
+    .login-head {
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+}
+
+.app-menu__item.router-link-exact-active, .app-menu__item:hover, .app-menu__item:focus {
+    background: #0d1214;
+    border-left-color: #009688;
+    text-decoration: none;
+    color: #fff;
+}
