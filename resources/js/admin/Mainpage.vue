@@ -62,10 +62,10 @@
     <!-- Sidebar menu-->
     <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <aside class="app-sidebar">
-      <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg" alt="User Image">
+      <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" :src="'/user_2.png'" alt="User Image">
         <div>
-          <p class="app-sidebar__user-name">John Doe</p>
-          <p class="app-sidebar__user-designation">Frontend Developer</p>
+          <p class="app-sidebar__user-name">{{ user.first_name }} {{ user.last_name }}</p>
+          <p class="app-sidebar__user-designation">{{ extractRole(user.role) }}</p>
         </div>
       </div>
       <ul class="app-menu">
@@ -92,6 +92,7 @@
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-gear"></i><span class="app-menu__label">Settings</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><router-link class="treeview-item" :to="{name:'school'}"><i class="icon fa fa-circle-o"></i> School Setting</router-link></li>
+            <li><router-link class="treeview-item" :to="{name:'user'}"><i class="icon fa fa-circle-o"></i> User Setting</router-link></li>
             <!-- <li><router-link class="treeview-item" :to="{name:'user'}"><i class="icon fa fa-circle-o"></i> User</router-link></li> -->
           </ul>
         </li>
@@ -115,20 +116,27 @@ export default {
     return{
       	message:'',
 			  title:'',
-      	status:0,
+        status:0,
+        user:{},
     }
   },
   methods: {
     	flashMessage(data){
              this.showMessage(data)
-        },
-        showMessage(data){
+      },
+      showMessage(data){
             this.message = data.message;
             $('.fm-body').show();
             setTimeout(() => {
                 $('.fm-body').fadeOut("slow");
             }, 700);
-		},
+      },
+      extractRole(num){
+        return num == 1 ? "Teacher" : num == 2 ? "Adinistrator" : "Student";
+      }
+  },
+  mounted() {
+    this.user = window.Laravel.user;
   },
 
 }

@@ -33,12 +33,15 @@
                                 <tbody>
                                     <tr class="tr-shadow" v-for="(list, idx) in students" :key="idx">
                                          <td>
-                                            <div class="table-data-feature">
+                                            <div class="btn-group">
                                                 <button class="btn btn-primary btn-sm" data-toggle="tooltip" @click="editStudent(list)" title="Edit">
                                                 <i class="fa fa-pencil"></i>
                                                 </button>
-                                                <button class="btn btn-warning btn-sm" data-toggle="tooltip" @click="archiveStudent(list)" title="Archive">
+                                                <button class="btn btn-danger btn-sm" data-toggle="tooltip" @click="archiveStudent(list)" title="Archive">
                                                 <i class="fa fa-archive"></i>
+                                                </button>
+                                                 <button class="btn btn-warning btn-sm" data-toggle="tooltip" @click="passwordStudent(list)" title="Archive">
+                                                <i class="fa fa-lock"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -215,6 +218,32 @@
                     </div>
                 </div>
             </div>
+            <div class="modal fade change-pass">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6>Change Password ( Name: {{ pass.first_name +" "+pass.last_name}} )</h6>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row justify-content-center">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="password" v-model="pass.password" class="form-control" placeholder="New Password">
+                                        <span class="errors-material" v-if="errors.password">{{errors.password[0]}}</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" v-model="pass.password_confirmation" class="form-control" placeholder="Password Confirmation">
+                                        <span class="errors-material" v-if="errors.password_confirmation">{{errors.password_confirmation[0]}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" @click="passwordChange()" class="btn btn-primary btn-block" >Save Changes</button>  
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </main>
 </template>
@@ -279,6 +308,7 @@ export default {
             btndis:false,
             sortOrders:sortOrders,
             sortKey:'created_at',
+            pass:{},
             tableData:{
                 draw:0,
                 length:10,
@@ -446,6 +476,23 @@ export default {
         },
         extractStudentType(num){
             return num == 1 ? "JHS" : num == 2 ? "SHS" : "";
+        },
+        passwordStudent(data){
+            this.pass = data;
+            $('.change-pass').modal('show');
+        },
+        passwordChange(){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.post('api/users-pass', this.pass).then(res=>{
+                    this.pass = {};
+                    this.$emit('show',{'message':'Password has been change!'});
+                    this.listOfStudent();
+                    this.errors = [];
+                    $('.change-pass').modal('hide');
+                }).catch(err=>{
+                    this.errors = err.response.data.errors
+                });
+            });
         }
     },
     mounted() {

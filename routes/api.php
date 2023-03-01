@@ -15,6 +15,7 @@ use App\Http\Controllers\JHSController;
 use App\Http\Controllers\SHSController;
 use App\Http\Controllers\EnrollController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\UserController;
 
 
 /*
@@ -61,6 +62,8 @@ Route::resource('shs-grade', SHSController::class);
 Route::get('enroll-auth', [EnrollController::class, 'getActiveEnrolled']);
 Route::resource('enroll', EnrollController::class);
 Route::resource('school', SchoolController::class);
+Route::post('users-pass', [UserController::class, 'changePassword']);
+Route::resource('users', UserController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
 });

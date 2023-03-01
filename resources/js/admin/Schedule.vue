@@ -188,16 +188,13 @@
                                         <td class="desc">{{ list.teacherd.first_name+" "+list.teacherd.last_name }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <div class="table-data-feature">
-                                                    <button class="btn btn-primary btn-sm" data-toggle="tooltip" @click="editS(list)" title="Edit">
-                                                        <i class="fa fa-pencil"></i> Edit
-                                                    </button>    
-                                                </div>
-                                                <div class="table-data-feature">
-                                                    <button class="btn btn-danger btn-sm" data-toggle="tooltip" @click="deleteS(list)" title="Delete">
-                                                        <i class="fa fa-trash"></i> Delete
-                                                    </button>    
-                                                </div>
+                                                <button class="btn btn-primary btn-sm" data-toggle="tooltip" @click="editS(list)" title="Edit">
+                                                    <i class="fa fa-pencil"></i> Edit
+                                                </button>    
+                                            
+                                                <button class="btn btn-danger btn-sm" data-toggle="tooltip" @click="deleteS(list)" title="Delete">
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </button>    
                                             </div>
                                         </td>
                                     </tr>

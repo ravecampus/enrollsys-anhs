@@ -6,6 +6,7 @@
     <meta name="csrf-token" value="{{ csrf_token() }}"/>
     <meta name="keywords" content="au theme template">
     <title>{{env('MIX_APP_NAME')}}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset(url('/logo.ico'))}}">
 
     <link rel="stylesheet" type="text/css" href="{{ asset(url('css/main.css')) }}">
     

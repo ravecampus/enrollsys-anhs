@@ -17,6 +17,7 @@ import JHSGrade from '../admin/JHSGrade';
 import SHSGrade from '../admin/SHSGrade';
 import Enrollment from '../admin/Enrollment';
 import School from '../admin/School';
+import User from '../admin/User';
 
 import Student from '../student/Mainpage';
 import Profile from '../student/Profile';
@@ -137,6 +138,11 @@ export const routes = [
                 name:'school',
                 component: School  
             },
+            {
+                path:'user',
+                name:'user',
+                component: User  
+            },
     
         ]
 
@@ -166,6 +172,7 @@ const openRoutes = [
     'shsgrade',
     'enrollment',
     'school',
+    'user',
 
     'student',
     'profile',
