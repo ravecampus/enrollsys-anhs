@@ -127,6 +127,8 @@
                                 </div>
                             <!-- </div> -->
                         </div>
+                        <p class="semibold-text mb-2"><router-link :to="{name:'home'}" data-toggle="flip">Log in?</router-link></p>
+
                         <hr>
                         <button type="button" @click="registration()" :disabled="btndis" class="btn btn-primary">{{btncap}}</button>
                     </div>

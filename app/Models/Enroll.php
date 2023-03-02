@@ -34,4 +34,8 @@ class Enroll extends Model
         return $this->hasMany(EnrollSched::class, 'enroll_id', 'id')->with('schedule');
     }
 
+    public function sy(){
+        return $this->hasOne(SchoolYear::class, 'id', 'school_year_id');
+    }
+
 }

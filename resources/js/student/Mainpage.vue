@@ -54,7 +54,7 @@
           <ul class="dropdown-menu settings-menu dropdown-menu-right">
             <li><a class="dropdown-item" href="page-user.html"><i class="fa fa-cog fa-lg"></i> Settings</a></li>
             <li><router-link class="dropdown-item" :to="{name:'profile'}"><i class="fa fa-user fa-lg"></i> Profile</router-link></li>
-            <li><a class="dropdown-item" href="page-login.html"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
+            <li><a class="dropdown-item" @click="logout()" href="#"><i class="fa fa-sign-out fa-lg"></i> Logout</a></li>
           </ul>
         </li>
       </ul>
@@ -98,14 +98,27 @@ export default {
   },
   methods: {
     	flashMessage(data){
-             this.showMessage(data)
-        },
-        showMessage(data){
-            this.message = data.message;
-            $('.fm-body').show();
-            setTimeout(() => {
-                $('.fm-body').fadeOut("slow");
-            }, 700);
+          this.showMessage(data)
+      },
+      showMessage(data){
+        this.message = data.message;
+        $('.fm-body').show();
+        setTimeout(() => {
+            $('.fm-body').fadeOut("slow");
+        }, 700);
+    },
+    logout(){
+          this.$axios.get('/sanctum/csrf-cookie').then(response => {
+              this.$axios.post('api/logout')
+                  .then(response => {
+                      if (response.data.success) {
+                          window.location.href = "/"
+                      } 
+                  })
+                  .catch(function (error) {
+                      console.error(error);
+                  });
+          })
 		},
   },
 

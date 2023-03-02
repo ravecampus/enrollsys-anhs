@@ -33,6 +33,20 @@
                                         <span class="errors-material" v-if="errors.middle_name">{{errors.middle_name[0]}}</span>
                                     </div>
                                 </div>
+                                 <div class="form-group row">
+                                    <label class="control-label col-md-3">Address</label>
+                                    <div class="col-md-8 p-0">
+                                        <input class="form-control" v-model="post.address" type="text" placeholder="Enter Address">
+                                        <span class="errors-material" v-if="errors.address">{{errors.address[0]}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="control-label col-md-3">Contact</label>
+                                    <div class="col-md-8 p-0">
+                                        <input class="form-control" v-model="post.contact" type="text" placeholder="Enter Contact">
+                                        <span class="errors-material" v-if="errors.contact">{{errors.contact[0]}}</span>
+                                    </div>
+                                </div>
                                 
                             </form>
                         </div>
@@ -66,7 +80,9 @@
                             <data-table class="mt-2" :columns="columns" :sortKey="sortKey" :sortOrders="sortOrders" @sort="sortBy">
                                 <tbody>
                                     <tr class="tr-shadow" v-for="(list, idx) in teachers" :key="idx">
-                                        <td class="desc">{{ list.last_name}}, {{ list.first_name}} {{list.middle_name}}</td>
+                                        <td class="desc">{{ list.last_name}}, {{ list.first_name }} {{ list.middle_name }}</td>
+                                        <td>{{ list.address }}</td>
+                                        <td>{{ list.contact }}</td>
                                         <td>
                                             <div class="table-data-feature">
                                                 <button class="btn btn-primary btn-sm" data-toggle="tooltip" @click="editTeacher(list)" title="Edit">
@@ -114,6 +130,8 @@ export default {
         let sortOrders = {};
         let columns =[
         {label:'Full Name', name:null},
+        {label:'Address', name:null},
+        {label:'Contact', name:null},
         {label:'Action', name:null},
         ];
         

@@ -37,6 +37,7 @@ use App\Http\Controllers\UserController;
 Route::post('auth-password', [AuthController::class, 'changePassword']);
 Route::post('auth-signin', [AuthController::class, 'signin']);
 Route::resource('auth', AuthController::class);
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('get-active', [SchoolYearController::class, 'getActiveSY']);
 Route::post('set-active', [SchoolYearController::class, 'setActive']);
@@ -60,6 +61,7 @@ Route::resource('student', StudentController::class);
 Route::resource('jhs-grade', JHSController::class);
 Route::resource('shs-grade', SHSController::class);
 Route::get('enroll-auth', [EnrollController::class, 'getActiveEnrolled']);
+Route::post('enroll-drop', [EnrollController::class, 'dropEnr']);
 Route::resource('enroll', EnrollController::class);
 Route::resource('school', SchoolController::class);
 Route::post('users-pass', [UserController::class, 'changePassword']);

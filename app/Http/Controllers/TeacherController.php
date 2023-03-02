@@ -49,13 +49,17 @@ class TeacherController extends Controller
         $request->validate([
             'last_name' => 'string|required',
             'first_name' => 'string|required',
-            'middle_name' => 'string|required'
+            'middle_name' => 'string|required',
+            'address' => 'string|required',
+            'contact' => 'string|required'
         ]);
 
         $user = User::create([
             'last_name' => $request->last_name,
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
+            'address' => $request->address,
+            'contact' => $request->contact,
             'role' => 1
         ]);
 
@@ -96,13 +100,17 @@ class TeacherController extends Controller
         $request->validate([
             'last_name' => 'string|required',
             'first_name' => 'string|required',
-            'middle_name' => 'string|required'
+            'middle_name' => 'string|required',
+            'address' => 'string|required',
+            'contact' => 'string|required'
         ]);
 
         $teacher = User::find($id);
         $teacher->last_name = $request->last_name;
         $teacher->first_name = $request->first_name;
         $teacher->middle_name = $request->middle_name;
+        $teacher->address = $request->address;
+        $teacher->contact = $request->contact;
         $teacher->save();
 
         return response()->json($teacher, 200);

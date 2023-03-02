@@ -158,6 +158,18 @@ const router = createRouter({
 const openRoutes = [
     'home',
     'register',
+    
+];
+
+const userRoutes = [
+    'student',
+    'profile',
+    'enroll',
+    'scheduled',
+    
+   
+];
+const adminRoutes = [
     'admin',
     'schoolyear',
     'strand',
@@ -173,24 +185,7 @@ const openRoutes = [
     'enrollment',
     'school',
     'user',
-
-    'student',
-    'profile',
-    'enroll',
-    'scheduled',
-  
-   
-];
-
-const userRoutes = [
-    'home',
-    
-   
-];
-const adminRoutes = [
-    // 'admin',
-    
-    
+     
 ];
 
 
@@ -201,7 +196,7 @@ router.beforeEach((to, from, next)=>{
         }
     }else{
         let user = window.Laravel.user;
-        if(adminRoutes.includes(to.name) && user.role == 1){
+        if(adminRoutes.includes(to.name) && (user.role == 1 || user.role == 2)){
             return next();
         }else if(userRoutes.includes(to.name) && user.role == 0){
             return next();
@@ -210,7 +205,7 @@ router.beforeEach((to, from, next)=>{
     if(openRoutes.includes(to.name)){
         return next();
     }else{
-        return next({name:'signin'});
+        return next({name:'home'});
     }
     
    

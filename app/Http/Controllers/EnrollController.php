@@ -20,9 +20,25 @@ class EnrollController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $length = $request->length;
+        $dir = $request->dir;
+        $searchValue = $request->search;
+        $query = Enroll::with('sectiond','strand', 'sy')->select('enroll.*', 'users.first_name', 'users.last_name','users.middle_name','users.lrn')
+                ->join('users', 'users.id', '=', 'enroll.user_id')
+                ->orderBy('created_at', 'asc');
+    
+        if($searchValue){
+            $query->where(function($query) use ($searchValue){
+                // $query->where('last_name', 'like', '%'.$searchValue.'%')
+                // ->orWhere('lrn', 'like', '%'.$searchValue.'%')
+                // ->orWhere('first_name', 'like', '%'.$searchValue.'%')
+                // ->orWhere('middle_name', 'like', '%'.$searchValue.'%');
+            });
+        }
+        $projects = $query->paginate($length);
+        return ['data'=>$projects, 'draw'=> $request->draw];
     }
 
     /**
@@ -101,7 +117,8 @@ class EnrollController extends Controller
                 'student_type' => $request->student_type,
                 'school_year_id' => $request->school_year,
                 'grade' => $request->grade,
-                'section_id' => $request->section
+                'section_id' => $request->section,
+                'status' => 1
             ]);
            
             
@@ -160,7 +177,8 @@ class EnrollController extends Controller
                 'grade' => $request->grade,
                 'term' => $request->term,
                 'strand' => $request->strand,
-                'section_id' => $request->section
+                'section_id' => $request->section,
+                'status' => 1,
             ]);
          
             
@@ -223,7 +241,14 @@ class EnrollController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $enr = Enroll::find($id);
+        
+        $end = EnrollSched::where('enroll_id', $id)->delete();
+        $jhs = JHSGrade::where('user_id', $enr->user_id)->delete();
+        $jhs = SHSGrade::where('user_id', $enr->user_id)->delete();
+        $enr->delete();
+
+        return response()->json($enr, 200);
     }
 
     public function getActiveEnrolled(){
@@ -251,4 +276,13 @@ class EnrollController extends Controller
         
         return response()->json(['enr'=>$enrl,'type'=>$type] , 200);
     }
+
+    public function dropEnr(Request $request){
+        $enrl = Enroll::find($request->id);
+        $enrl->status = 2;
+        $enrl->save();
+
+        return response()->json($enrl, 200);
+    }
+
 }

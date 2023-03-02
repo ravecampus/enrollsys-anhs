@@ -21,7 +21,7 @@
                             <h3 class="title">All Items</h3>
                             <p><button type="button" @click="showModal()" class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add</button></p>
                         </div>
-                        <div class="row">
+                        <div class="row mb-4">
                             <div class="col-md-6">
                                 <input type="text" v-model="tableData.search" @input="listOfStudent()" class="form-control" placeholder="Search... (Last name, First Name, Middle Name, LRN)">
                             </div>

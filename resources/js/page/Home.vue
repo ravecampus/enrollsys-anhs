@@ -18,12 +18,12 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">USERNAME</label>
-                    <input class="form-control" v-model="post.username" type="text" placeholder="Username" autofocus>
+                    <input class="form-control" @keyup.enter="login" v-model="post.username" type="text" placeholder="Username" autofocus>
                     <span class="errors-material" v-if="errors.username">{{errors.username[0]}}</span>
                 </div>
                 <div class="form-group">
                     <label class="control-label">PASSWORD</label>
-                    <input class="form-control" v-model="post.password" type="password" placeholder="Password">
+                    <input class="form-control" @keyup.enter="login"  v-model="post.password" type="password" placeholder="Password">
                     <span class="errors-material" v-if="errors.password">{{errors.password[0]}}</span>
                 </div>
                 <div class="form-group">
@@ -33,7 +33,7 @@
                         <input type="checkbox"><span class="label-text">Stay Signed in</span>
                         </label>
                     </div>
-                    <p class="semibold-text mb-2"><a href="#" data-toggle="flip">Forgot Password ?</a></p>
+                    <!-- <p class="semibold-text mb-2"><a href="#" data-toggle="flip">Forgot Password ?</a></p> -->
                       <p class="semibold-text mb-2"><router-link :to="{name:'register'}" data-toggle="flip">Not yet Register?</router-link></p>
                     </div>
                 </div>
@@ -78,6 +78,12 @@ export default {
                 this.btncap = "SIGNING..."
                 this.$axios.post('api/auth-signin', this.post).then(res=>{
                     this.btndis = false;
+                    let data = res.data;
+                    if(data.role == 1 ||data.role == 2){
+                        window.location.href="/admin";
+                    }else{
+                        window.location.href="/student";
+                    }
                     this.btncap = "SIGN IN";
                 }).catch(err=>{
                     this.btndis = false;
@@ -86,7 +92,18 @@ export default {
                 });
             });
         }
-    }
+    },
+    mounted() {
+        //  if(window.Laravel.isLoggedin){
+        //     let user = window.Laravel.user;
+        //     this.auth = true;
+        //     if(user.role == 1 || user.role == 2){
+        //         this.$router.push({name:'admindashboard'})
+        //     }else {
+        //        this.$router.push({name:'homed'})
+		// 	}
+        // }
+    },
 }
 </script>
 
