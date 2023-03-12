@@ -50,6 +50,9 @@ class ScheduleController extends Controller
                 ->orderBy('created_at', $dir);
             }
           
+        }else{
+            $errors = ['errors'=>['errs' => ['No active School Year!']]];
+            return response()->json($errors,401);
         }
       
     
@@ -83,6 +86,19 @@ class ScheduleController extends Controller
     
     public function store(Request $request)
     {
+        
+       
+
+        $sched = Schedule::where('school_year', $request->school_year)
+                ->where('section', $request->section)
+                ->where('subject', $request->subject)->first();
+
+        if(isset($sched)){
+            $errors = ['errors'=>['errs' => ['Subject has been already added for this section!']]];
+            return response()->json($errors,422);
+        }
+
+        
         if($request->type == 1){
             $request->validate([
                 'school_year' => 'required',
@@ -119,7 +135,29 @@ class ScheduleController extends Controller
         
         $frm = Carbon::createFromTime($request->t_from['hours'], $request->t_from['minutes'], $request->t_from['seconds']);
         $to = Carbon::createFromTime($request->t_to['hours'], $request->t_to['minutes'], $request->t_to['seconds']);
-    
+          
+        $con = Schedule::where('school_year', $request->school_year)
+                ->where('section', $request->section)
+                ->whereTime('t_from','>=',$frm)
+                ->whereTime('t_from','<=', $to)
+                ->whereTime('t_to','>=', $frm)
+                ->whereTime('t_to','<=', $to)
+                ->first();
+
+        $reqday = json_decode($request->days);
+        $dbday = json_decode($con->day);
+
+        if(isset($con)){
+            $data = array_intersect($reqday, $dbday);
+            if(count($data) > 0){
+                $errors = ['errors'=>['errs' => ['Conflict of time in the day of schedule!']]];
+                return response()->json($errors,422);
+            }
+          
+        }
+        
+
+
         $sched = Schedule::create([
             'school_year' => $request->school_year,
             'type' => $request->type,

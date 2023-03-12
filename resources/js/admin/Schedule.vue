@@ -10,6 +10,11 @@
                 <div class="col-md-12">
                     <div class="tile">
                         <h3 class="tile-title">Schedule</h3>
+                        <div class="alert alert-danger p-0" v-if="errors.errs">
+                            <div class="alert errors-material m-0">
+                                <div v-if="errors.errs"><strong>*</strong>{{errors.errs[0]}}</div>
+                            </div>
+                        </div>
                         <div class="tile-body">
                             <form class="form-horizontal row">
                                 <div class="col-md-4">
@@ -159,20 +164,9 @@
                     </div>
                 </div>
 
-
                 <div class="col-md-12">
                     <div class="tile">
-                        <!-- <div class="overlay" v-if="schedules.length == 0">
-                            <div class="m-loader mr-4">
-                                <svg class="m-circular" viewBox="25 25 50 50">
-                                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="4" stroke-miterlimit="10"/>
-                                </svg>
-                            </div>
-                            <h3 class="l-text">Loading</h3>
-                        </div> -->
                         <div class="tile-title-w-btn" >
-                        <!-- <h3 class="title">All Items</h3> -->
-                        <!-- <p><a class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add Item	</a></p> -->
                         </div>
                         <div class="tile-body">
                             <b>List of Schedule </b><br>
@@ -344,7 +338,7 @@ export default {
                     this.btncap = "Saving..."
                     this.$axios.put('api/schedule/'+this.post.id, this.post).then(res=>{
                         // this.post = {};
-                        this.newS();
+                        // this.newS();
                         this.btncap = "Save"
                         this.$emit('show',{'message':'Schedule has been modified!'});
                         this.errors = [];
@@ -360,7 +354,7 @@ export default {
                     this.btncap = "Saving..."
                     this.$axios.post('api/schedule', this.post).then(res=>{
                         // this.post = {};
-                        this.newS();
+                        // this.newS();
                         this.btncap = "Save"
                         this.$emit('show',{'message':'Schedule has been saved!'});
                         this.listOfSchedule();
@@ -383,6 +377,7 @@ export default {
             this.$axios.get('sanctum/csrf-cookie').then(response => {
                 this.tableData.draw ++;
                 this.$axios.get(urls,{params:this.tableData}).then(res=>{
+                    this.errors = [];
                 let data = res.data;
                     if(this.tableData.draw == data.draw){
                         this.schedules = data.data.data;
@@ -392,7 +387,7 @@ export default {
                     }
                 
                 }).catch(err=>{
-                
+                    this.errors = err.response.data.errors
                 });
             });
         },

@@ -102,8 +102,9 @@
                         </div>
                         </div>
                     </div>
-
-
+                    <div class="text-center" v-if="enrolls.length <= 0 && schedules.length <= 0">
+                        No Result Found!
+                    </div>
                     <hr>
                 </div>
             </div>
@@ -273,7 +274,25 @@ export default {
         },
         extractTerm(num){
             return num == 1 ? "1st" : num == 2 ? "2nd" :"";
-        }
+        },
+        specifyGrade(num){
+            if(num == 1){
+                this.senior = false;
+                this.grades = [
+                    {'val':7},
+                    {'val':8},
+                    {'val':9},
+                    {'val':10},
+                    ];
+            }else if(num == 2){
+                this.senior = true;
+                this.grades = [
+                    {'val':11},
+                    {'val':12},
+                    ];
+            }
+           
+        },
 
     },
     mounted() {

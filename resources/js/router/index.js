@@ -4,6 +4,7 @@ import Home from '../page/Home';
 import Register from '../page/Registration';
 
 import Admin from '../admin/Mainpage';
+import Dashboard from '../admin/Dashboard';
 import SchoolYear from '../admin/SchoolYear';
 import Strand from '../admin/Strand';
 import Section from '../admin/Section';
@@ -16,13 +17,19 @@ import StudentArchive from '../admin/StudentArchive';
 import JHSGrade from '../admin/JHSGrade';
 import SHSGrade from '../admin/SHSGrade';
 import Enrollment from '../admin/Enrollment';
+import EnrollmentHistory from '../admin/EnrollmentHistory';
 import School from '../admin/School';
 import User from '../admin/User';
+import ClassList from '../admin/ClassList';
+import StudentRecord from '../admin/StudentRecord';
+import AdminProfile from '../admin/Profile';
 
 import Student from '../student/Mainpage';
 import Profile from '../student/Profile';
 import Enroll from '../student/Enroll';
 import Scheduled from '../student/Scheduled';
+import EnrolledHistory from '../student/EnrolledHistory';
+import StudentHome from '../student/Home';
 
 
 export const routes = [
@@ -52,6 +59,11 @@ export const routes = [
         component: Student,
         children:[
             {
+                name: 'studenthome',
+                path: '',
+                component: StudentHome,
+            },
+            {
                 name: 'profile',
                 path: 'profile',
                 component: Profile,
@@ -65,6 +77,11 @@ export const routes = [
                 name: 'scheduled',
                 path: 'scheduled',
                 component: Scheduled,
+            },
+            {
+                name: 'enrolledhistory',
+                path: 'enrolled-history',
+                component: EnrolledHistory,
             }
         ]
     },
@@ -73,6 +90,11 @@ export const routes = [
         path: '/admin',
         component: Admin,
         children:[
+            {
+                path:'',
+                name:'dashboard',
+                component: Dashboard  
+            },
             {
                 path:'school-year',
                 name:'schoolyear',
@@ -143,6 +165,29 @@ export const routes = [
                 name:'user',
                 component: User  
             },
+            {
+                path:'class-list',
+                name:'classlist',
+                component: ClassList  
+            },
+            {
+                path:'student-record',
+                name:'studentrecord',
+                component: StudentRecord  
+            },
+
+            {
+                path:'admin-profile',
+                name:'adminprofile',
+                component: AdminProfile  
+            },
+            {
+                path:'enrollment-history',
+                name:'enrollmenthistory',
+                component: EnrollmentHistory  
+            },
+    
+    
     
         ]
 
@@ -166,6 +211,8 @@ const userRoutes = [
     'profile',
     'enroll',
     'scheduled',
+    'enrolledhistory',
+    'studenthome',
     
    
 ];
@@ -185,6 +232,11 @@ const adminRoutes = [
     'enrollment',
     'school',
     'user',
+    'classlist',
+    'studentrecord',
+    'adminprofile',
+    'dashboard',
+    'enrollmenthistory'
      
 ];
 

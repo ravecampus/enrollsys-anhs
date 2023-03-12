@@ -83,6 +83,7 @@ export default {
                     this.$axios.post('api/school', this.post).then(res=>{
                         this.post = res.data;
                         this.btncap = "Update"
+                        this.errors = [];
                     }).catch(err=>{
                         this.btncap = "Update"
                         this.errors = err.response.data.errors

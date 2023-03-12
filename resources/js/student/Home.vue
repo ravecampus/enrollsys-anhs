@@ -3,23 +3,10 @@
         <div class="app-title">
             <div>
                 <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
-                <!-- <p>A free and open source Bootstrap 4 admin template</p> -->
                 </div>
-                <!-- <ul class="app-breadcrumb breadcrumb">
-                <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                </ul> -->
             </div>
             <div class="row">
-                <div class="col-md-6 col-lg-3">
-                <div class="widget-small primary coloured-icon"><i class="icon fa fa-users fa-3x"></i>
-                    <div class="info">
-                    <h4>Students</h4>
-                    <p><b>{{ students.length }}</b></p>
-                    </div>
-                </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
+                <div class="col-md-6 col-lg-4">
                 <div class="widget-small info coloured-icon"><i class="icon fa fa-calendar fa-3x"></i>
                     <div class="info">
                     <h4>School Year</h4>
@@ -27,22 +14,31 @@
                     </div>
                 </div>
                 </div>
-                <div class="col-md-6 col-lg-3">
-                <div class="widget-small warning coloured-icon"><i class="icon fa fa-user-plus fa-3x"></i>
+                <div class="col-md-6 col-lg-4">
+                <div class="widget-small primary coloured-icon"><i class="icon fa fa-user fa-3x"></i>
                     <div class="info">
-                    <h4>Enrolled</h4>
-                    <p><b>{{ enrolled.length }}</b></p>
+                    <h4>Grade</h4>
+                    <p v-if="enroll != null"><b>{{ enroll.grade }}</b></p>
                     </div>
                 </div>
                 </div>
-                <div class="col-md-6 col-lg-3">
+           
+                <div class="col-md-6 col-lg-4">
+                <div class="widget-small warning coloured-icon"><i class="icon fa fa-address-card fa-3x"></i>
+                    <div class="info">
+                    <h4>Section</h4>
+                    <p v-if="enroll != null"><b> {{section.section_name}}</b></p>
+                    </div>
+                </div>
+                </div>
+                <!-- <div class="col-md-6 col-lg-3">
                 <div class="widget-small danger coloured-icon"><i class="icon fa fa-file-text fa-3x"></i>
                     <div class="info">
                     <h4>Sections</h4>
                     <p><b>{{sections.length }}</b></p>
                     </div>
                 </div>
-                </div>
+                </div> -->
             </div>
             <!-- <div class="row">
                 <div class="col-md-6">
@@ -70,33 +66,13 @@ export default {
     data(){
         return{
             students:[],
-            enrolled:[],
-            sections:[],
+            enroll:{},
+            enrolls:{},
+            section:{},
             schoolyear:{}
         }
     },
     methods: {
-        getStudent(){
-            this.$axios.get('sanctum/csrf-cookie').then(response=>{
-                this.$axios.get('api/get-student').then(res=>{
-                    this.students = res.data;
-                })
-            });
-        },
-        getEnrolled(){
-            this.$axios.get('sanctum/csrf-cookie').then(response=>{
-                this.$axios.get('api/get-enrolled').then(res=>{
-                    this.enrolled = res.data;
-                })
-            });
-        },
-        getSection(){
-            this.$axios.get('sanctum/csrf-cookie').then(response=>{
-                this.$axios.get('api/get-section').then(res=>{
-                    this.sections = res.data;
-                })
-            });
-        },
         getSchoolYear(){
             this.$axios.get('sanctum/csrf-cookie').then(response=>{
                 this.$axios.get('api/get-active').then(res=>{
@@ -110,11 +86,28 @@ export default {
                 return data+ " - "+ num;
             }
         },
+        getAuthEnroll(){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('api/enroll-auth').then(res=>{
+                    let data = res.data;
+                    this.type = data.type;
+                    if(data.enr != null){
+                        if(data.type == 1){
+                            this.enroll = data.enr;
+                            this.section = data.enr.sectiond;
+                        }else{
+                            this.enroll = data.enr[0];
+                            this.section = data.enr[0].sectiond;
+                        }
+                    }
+                    
+                });
+            });
+        },
     },
     mounted() {
-        this.getStudent();
-        this.getEnrolled();
-        this.getSection();
+        let data = window.Laravel.user;
+        this.getAuthEnroll();
         this.getSchoolYear();
     },
 }

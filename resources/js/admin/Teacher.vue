@@ -129,7 +129,7 @@ export default {
         
         let sortOrders = {};
         let columns =[
-        {label:'Full Name', name:null},
+        {label:'Fullname', name:null},
         {label:'Address', name:null},
         {label:'Contact', name:null},
         {label:'Action', name:null},

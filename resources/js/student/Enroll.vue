@@ -96,6 +96,13 @@
                     </div>
                 </div>
             </div>
+            <!-- <div class="col-md-2">
+                <div class="card">
+                    <div class="card-body">
+
+                    </div>
+                </div>
+            </div> -->
         </div>
      </main>
 </template>
@@ -228,8 +235,10 @@ export default {
                 this.btndis = true;
                 this.$axios.post('api/enroll', this.post).then(res=>{
                    this.btncap = "Enroll";
+                   this.$emit('show',{'message':'You are enrolled!'});
                    this.btndis = false;
                    this.errors = [];
+                   this.$router.push({name:'scheduled'});
                 }).catch(err=>{
                     this.btncap = "Enroll";
                     this.btndis = false;

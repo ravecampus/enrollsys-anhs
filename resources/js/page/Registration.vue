@@ -5,13 +5,18 @@
         </section>
         <section class="login-content">
         <div class="logo">
-            <h1>Vali</h1>
+            <h1>{{title}}</h1>
         </div>
         <div class="row registration-form mb-5">
             <div class="col-8 offset-2">
                 <div class="card">
+                    <div class="card-header bg-white">
+                        <h4 class="text-center mb-0">{{school.school_name}}</h4>
+                        <div class="text-center mt-0">{{school.address}}</div>
+                    </div>
                     <div class="card-body">
                         <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>SIGN UP</h3>
+                        <p class="semibold-text mb-2"><router-link :to="{name:'home'}" data-toggle="flip">Log in?</router-link></p>
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label class="control-label">LAST NAME</label>
@@ -127,7 +132,7 @@
                                 </div>
                             <!-- </div> -->
                         </div>
-                        <p class="semibold-text mb-2"><router-link :to="{name:'home'}" data-toggle="flip">Log in?</router-link></p>
+                     
 
                         <hr>
                         <button type="button" @click="registration()" :disabled="btndis" class="btn btn-primary">{{btncap}}</button>
@@ -165,7 +170,9 @@ export default {
             post:{},
             errors:[],
             btncap:"Submit",
-            btndis:false
+            btndis:false,
+            school:{},
+            title:'',
         }
     },
     methods:{
@@ -195,8 +202,19 @@ export default {
             }else{
                 this.post.age = 0;
             }
+        },
+        getSchoolName(){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('api/school').then(res=>{
+                    this.school = res.data;
+                });
+            });
         }
-    }
+    },
+    mounted() {
+        this.title = window.Title.app_name;
+        this.getSchoolName();
+    },
 }
 </script>
 

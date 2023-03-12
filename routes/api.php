@@ -16,6 +16,8 @@ use App\Http\Controllers\SHSController;
 use App\Http\Controllers\EnrollController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ClassListController;
+use App\Http\Controllers\DashboardController;
 
 
 /*
@@ -36,11 +38,18 @@ use App\Http\Controllers\UserController;
 
 Route::post('auth-password', [AuthController::class, 'changePassword']);
 Route::post('auth-signin', [AuthController::class, 'signin']);
+Route::post('admin-profile', [AuthController::class,'updateAdmin']);
 Route::resource('auth', AuthController::class);
+Route::resource('school', SchoolController::class);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::get('get-student', [DashboardController::class, 'getStudent']);
+Route::get('get-enrolled', [DashboardController::class, 'getEnrolled']);
+Route::get('get-section', [DashboardController::class, 'getSection']);
 
 Route::get('get-active', [SchoolYearController::class, 'getActiveSY']);
 Route::post('set-active', [SchoolYearController::class, 'setActive']);
+Route::get('get-sy', [SchoolYearController::class, 'getSchoolYear']);
 Route::resource('school-year', SchoolYearController::class);
 Route::resource('strand', StrandController::class);
 Route::get('list-teacher', [TeacherController::class, 'listTeacher']);
@@ -62,10 +71,15 @@ Route::resource('jhs-grade', JHSController::class);
 Route::resource('shs-grade', SHSController::class);
 Route::get('enroll-auth', [EnrollController::class, 'getActiveEnrolled']);
 Route::post('enroll-drop', [EnrollController::class, 'dropEnr']);
+Route::get('enroll-history', [EnrollController::class, 'enrollmentHistory']);
 Route::resource('enroll', EnrollController::class);
-Route::resource('school', SchoolController::class);
+
 Route::post('users-pass', [UserController::class, 'changePassword']);
 Route::resource('users', UserController::class);
+Route::resource('class-list', ClassListController::class);
+Route::get('student-list', [StudentController::class, 'listOfStudent']);
+Route::get('auth-user', [AuthController::class, 'authUser']);
+Route::get('auth-year', [EnrollController::class, 'authEnrollYear']);
 
 Route::middleware('auth:sanctum')->group(function () {
 });

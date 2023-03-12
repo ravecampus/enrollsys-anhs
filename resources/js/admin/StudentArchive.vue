@@ -236,9 +236,9 @@ export default {
         let columns =[
         {label:'', name:null},
         {label:'LRN #', name:null},
-        {label:'LAST NAME', name:null},
-        {label:'FIRST NAME', name:null},
-        {label:'MIDDLE NAME', name:null},
+        {label:'LASTNAME', name:null},
+        {label:'FIRSTNAME', name:null},
+        {label:'MIDDLENAME', name:null},
         {label:'STUDENT TYPE', name:null},
         {label:'AGE', name:null},
         {label:'BIRTHDATE', name:null},

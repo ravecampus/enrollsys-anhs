@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEnrollSchedTable extends Migration
+class CreateTransactionLogTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateEnrollSchedTable extends Migration
      */
     public function up()
     {
-        Schema::create('enroll_sched', function (Blueprint $table) {
+        Schema::create('transaction_log', function (Blueprint $table) {
             $table->id();
-            $table->integer('enroll_id')->nullable();
-            $table->integer('schedule_id')->nullable();
-            $table->integer('user_id')->nullable();
+            $this->integer('user_id')->nullable();
+            $this->integer('type')->nullable();
+            $this->string('event')->nullable();
+            $this->text('data')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateEnrollSchedTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('enroll_sched');
+        Schema::dropIfExists('transaction_log');
     }
 }

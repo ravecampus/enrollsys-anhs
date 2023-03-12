@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\schedule;
 use App\Models\SchoolYear;
 
-class SchoolYearController extends Controller
+class ClassListController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,19 +15,52 @@ class SchoolYearController extends Controller
      */
     public function index(Request $request)
     {
-        $columns = ['description','created_at'];
+         
+        $columns = ['created_at'];
         $length = $request->length;
         $column = $request->column;
         $dir = $request->dir;
         $searchValue = $request->search;
-        $query = SchoolYear::orderBy('created_at', $dir);
+        $grade = $request->grade;
+        $section = $request->section;
+        $term = $request->term;
+        $subject = $request->subject;
+
+        $sy = SchoolYear::where('is_active', 1)->first();
+
+        if($request->senior == 2){
+            $request->validate([
+                'grade' => 'required',
+                'section' => 'required',
+                'term' => 'required',
+                'subject' => 'required',
+            ]);
+            $query = schedule::with('enrollsched', 'teacherd', 'school_year','sectiond','subjectd')->where('school_year', $sy->id)
+            ->where('grade', $grade)
+            ->where('section', $section)
+            ->where('term', $term)
+            ->where('subject', $subject)
+            ->orderBy('created_at', $dir);
+        }else{
+            $request->validate([
+                'grade' => 'required',
+                'section' => 'required',
+                'subject' => 'required',
+            ]);
+            $query = schedule::with('enrollsched', 'teacherd', 'school_year', 'sectiond','subjectd')->where('school_year', $sy->id)
+            ->where('grade', $grade)
+            ->where('section', $section)
+            ->where('subject', $subject)
+            ->orderBy('created_at', $dir);
+        }
+      
     
         if($searchValue){
             $query->where(function($query) use ($searchValue){
-                $query->where('description', 'like', '%'.$searchValue.'%');
+                // $query->where('description', 'like', '%'.$searchValue.'%');
             });
         }
-        $projects = $query->paginate($length);
+        $projects = $query->first();
         return ['data'=>$projects, 'draw'=> $request->draw];
     }
 
@@ -48,12 +82,7 @@ class SchoolYearController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(['description'=>'required']);
-
-        $sy = SchoolYear::create([
-            'description' => $request->description
-        ]);
-        return response()->json($sy, 200);
+        //
     }
 
     /**
@@ -87,12 +116,7 @@ class SchoolYearController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate(['description'=>'required']);
-
-        $sy = SchoolYear::find($id);
-        $sy->description = $request->description;
-        $sy->save();
-        return response()->json($sy, 200);
+        //
     }
 
     /**
@@ -104,23 +128,5 @@ class SchoolYearController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function setActive(Request $request){
-        SchoolYear::where('is_active', 1)->update(array('is_active' => 0));
-        $sy = SchoolYear::find($request->id);
-        $sy->is_active = 1;
-        $sy->save();
-        return response()->json($sy, 200);
-    }
-
-    public function getActiveSY(){
-        $sy = SchoolYear::where('is_active', 1)->first();
-        return response()->json($sy, 200);
-    }
-
-    public function getSchoolYear(){
-        $sy = SchoolYear::all();
-        return response()->json($sy, 200);
     }
 }

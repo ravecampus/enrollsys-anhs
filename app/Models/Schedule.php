@@ -37,4 +37,13 @@ class Schedule extends Model
     public function teacherd(){
         return $this->hasOne(User::class, 'id', 'teacher');
     }
+
+    public function school_year(){
+        return $this->hasOne(SchoolYear::class, 'id', 'school_year');
+    }
+
+    public function enrollsched(){
+        return $this->hasMany(EnrollSched::class, 'schedule_id', 'id')->with('student');
+    }
+
 }

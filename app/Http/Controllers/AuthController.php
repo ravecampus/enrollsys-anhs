@@ -204,8 +204,38 @@ class AuthController extends Controller
         ]);
 
         $user = User::find($request->id);
-        $user->password = $request->password;
+        $user->password = bcrypt($request->password);
         $user->save();
         return response()->json($user, 200);
+   }
+
+   public function updateAdmin(Request $request){
+    $request->validate([
+        'first_name' => 'required|string',
+        'last_name' => 'required|string',
+        'middle_name' => 'required|string',
+        'gender' => 'required',
+        'contact' => 'required',
+        'address' => 'required|string',
+        'username' => 'required|string',
+    ]);
+
+    $user = User::find($request->id);
+
+    $user->last_name = $request->last_name;
+    $user->first_name = $request->first_name;
+    $user->middle_name = $request->middle_name;
+    $user->gender = $request->gender;
+    $user->contact = $request->contact;
+    $user->address = $request->address;
+    $user->username = $request->username;
+    $user->save();
+
+    return response()->json($user, 200);
+   }
+
+   public function authUser(){
+       $user = User::with('enroll','shsgrade','jhsgrade')->where('id', Auth::id())->first();
+       return response()->json($user, 200);
    }
 }

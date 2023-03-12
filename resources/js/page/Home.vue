@@ -5,10 +5,16 @@
         </section>
         <section class="login-content">
         <div class="logo">
-            <h1>Vali</h1>
+            <h1>{{title}}</h1>
         </div>
+        
         <div class="card login-card">
+            <div class="card-header bg-white">
+                <h4 class="text-center mb-0">{{school.school_name}}</h4>
+                <div class="text-center mt-0">{{school.address}}</div>
+            </div>
             <div class="card-body">
+               
                 <form class="login-form card-body">
                 <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>SIGN IN</h3>
                 <div class="alert alert-danger p-0" v-if="errors.errs">
@@ -69,6 +75,8 @@ export default {
             errors:[],
             btncap:'SIGN IN',
             btndis:false,
+            title:'',
+            school:{}
         }
     },
     methods:{
@@ -91,18 +99,27 @@ export default {
                     this.errors = err.response.data.errors
                 });
             });
+        },
+        getSchoolName(){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('api/school').then(res=>{
+                    this.school = res.data;
+                });
+            });
         }
     },
     mounted() {
-        //  if(window.Laravel.isLoggedin){
-        //     let user = window.Laravel.user;
-        //     this.auth = true;
-        //     if(user.role == 1 || user.role == 2){
-        //         this.$router.push({name:'admindashboard'})
-        //     }else {
-        //        this.$router.push({name:'homed'})
-		// 	}
-        // }
+        this.title = window.Title.app_name;
+         if(window.Laravel.isLoggedin){
+            let user = window.Laravel.user;
+            this.auth = true;
+            if(user.role == 1 || user.role == 2){
+                this.$router.push({name:'dashboard'})
+            }else {
+               this.$router.push({name:'studenthome'})
+			}
+        }
+        this.getSchoolName();
     },
 }
 </script>

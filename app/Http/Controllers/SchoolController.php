@@ -14,7 +14,8 @@ class SchoolController extends Controller
      */
     public function index()
     {
-        //
+        $school = School::find(1);
+        return response()->json($school, 200);
     }
 
     /**

@@ -14,11 +14,17 @@ class EnrollSched extends Model
     protected $fillable = [
         'enroll_id',
         'schedule_id',
+        'user_id',
     ];
 
     public function schedule(){
         return $this->hasOne(Schedule::class, 'id', 'schedule_id')->with('subjectd', 'teacherd');
     }
+
+    public function student(){
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
 
 
 }

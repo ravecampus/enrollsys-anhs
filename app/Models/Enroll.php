@@ -23,9 +23,9 @@ class Enroll extends Model
     ];
 
     public function sectiond(){
-        return $this->hasOne(Section::class, 'id', 'section_id');
+        return $this->hasOne(Section::class, 'id', 'section_id')->with('advise');
     }
-
+    
     public function strand(){
         return $this->hasOne(Strand::class, 'id', 'strand');
     }

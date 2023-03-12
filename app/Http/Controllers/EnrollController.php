@@ -25,8 +25,10 @@ class EnrollController extends Controller
         $length = $request->length;
         $dir = $request->dir;
         $searchValue = $request->search;
+        $actyer = SchoolYear::where('is_active', 1)->first();
         $query = Enroll::with('sectiond','strand', 'sy')->select('enroll.*', 'users.first_name', 'users.last_name','users.middle_name','users.lrn')
                 ->join('users', 'users.id', '=', 'enroll.user_id')
+                ->where('enroll.school_year_id', $actyer->id)
                 ->orderBy('created_at', 'asc');
     
         if($searchValue){
@@ -60,6 +62,25 @@ class EnrollController extends Controller
     public function store(Request $request)
     {
         $auth = Auth::id();
+        $congrade = Enroll::where('user_id', $auth)->where('grade', $request->grade)->first();
+        if(isset($congrade) && ($request->student_type == 1)){
+            $errors = ['errors'=>['grade' => ['You Already take that GRADE LEVEL!']]];
+            return response()->json($errors,422);
+        }
+
+        $congrade_ = Enroll::where('user_id', $auth)
+        ->where('grade', $request->grade)
+        ->where('term', 1)
+        ->first();
+        $congrade_2 = Enroll::where('user_id', $auth)
+        ->where('grade', $request->grade)
+        ->where('term', 2)
+        ->first();
+        if(isset($congrade_) && isset($congrade_2) && ($request->student_type == 2)){
+            $errors = ['errors'=>['grade' => ['You Already take that GRADE LEVEL2!']]];
+            return response()->json($errors,422);
+        }
+        
         if($request->student_type == 1){
             $conf = Enroll::where('user_id', $auth)->where('school_year_id', $request->school_year)->first();
         }else if($request->student_type == 2){
@@ -126,6 +147,7 @@ class EnrollController extends Controller
                 EnrollSched::create([
                     'enroll_id'=> $enroll->id,
                     'schedule_id'=> $value['id'],
+                    'user_id'=> Auth::id(),
                     ]);
             }
         
@@ -186,11 +208,9 @@ class EnrollController extends Controller
                 EnrollSched::create([
                     'enroll_id'=> $enroll->id,
                     'schedule_id'=> $value['id'],
+                    'user_id'=> Auth::id(),
                     ]);
             }
-        
-
-
 
         }
         return response()->json($enroll, 200);
@@ -283,6 +303,32 @@ class EnrollController extends Controller
         $enrl->save();
 
         return response()->json($enrl, 200);
+    }
+
+    public function enrollmentHistory(Request $request){
+
+        $request->validate(['school_year'=>'required']);
+
+        $length = $request->length;
+        $dir = $request->dir;
+        $searchValue = $request->search;
+        $actyer = $request->school_year;
+        $query = Enroll::with('sectiond','strand', 'sy')->select('enroll.*', 'users.first_name', 'users.last_name','users.middle_name','users.lrn')
+                ->join('users', 'users.id', '=', 'enroll.user_id')
+                ->where('enroll.school_year_id', $actyer)
+                ->orderBy('created_at', 'asc');
+    
+        $projects = $query->paginate($length);
+        return ['data'=>$projects, 'draw'=> $request->draw];
+    }
+
+    public function authEnrollYear(){
+        $sy = SchoolYear::select('school_year.*', 'enroll.user_id')
+            ->join('enroll', 'enroll.school_year_id','=','school_year.id')
+            ->where('enroll.user_id', Auth::id())
+            ->get();
+        
+        return response()->json($sy, 200);
     }
 
 }

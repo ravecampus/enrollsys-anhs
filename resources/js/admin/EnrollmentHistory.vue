@@ -2,7 +2,7 @@
     <main class="app-content">
         <div class="app-title">
             <div>
-                <h1><i class="fa fa-calendar-plus-o"></i> Enrollment ({{ schoolYearDisplay(schoolyear.description) }})</h1>
+                <h1><i class="fa fa-calendar-plus-o"></i> Enrollment History </h1>
                 <!-- <p>Set up Students</p> -->
                 </div>
             </div>
@@ -19,14 +19,24 @@
                         </div> -->
                         <div class="tile-title-w-btn" >
                             <!-- <h3 class="title">All Items</h3> -->
-                            <p><button type="button" @click="showModal()" class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add</button></p>
+                            <!-- <p><button type="button" @click="showModal()" class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add</button></p> -->
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <input type="text" v-model="tableData.search" @input="listOfStudent()" class="form-control" placeholder="Search... (Last name, First Name, Middle Name, LRN)">
+                        <div class="col-md-3 mt-3">    
+                            SCHOOL YEAR: 
+                            <div class="input-group">
+                                <select class="form-control" v-model="tableData.school_year">
+                                    <option v-for="(ls,idx) in schoolyears" :key="idx" :value="ls.id">{{ schoolYearDisplay(ls.description) }}</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary" @click="filterYear()" type="button">
+                                        <i class="fa fa-filter"></i>
+                                        {{ btnload }}
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="tile-body">
+                        <span class="errors-material" v-if="errors.school_year">{{errors.school_year[0]}}</span>
+                        <div class="tile-body mt-5">
                             <b>List of Student </b><br>
                             <!-- <router-link :to="{name:'studentsarchive'}">Archives</router-link> -->
                             <data-table class="mt-2" :columns="columns" :sortKey="sortKey" :sortOrders="sortOrders" @sort="sortBy">
@@ -44,11 +54,7 @@
                                         <td>{{ list.grade }}</td>
                                         <td>{{ list.sectiond.section_name }}</td>
                                         <td>{{ formatDate(list.created_at) }}</td>
-                                        <td> <strong>
-                                            {{ extractStatus(list.status) }}
-                                            </strong>
-                                        </td>
-                                        <td>
+                                        <!-- <td>
                                             <div class="btn-group">
                                                 <button class="btn btn-warning btn-sm" data-toggle="tooltip" @click="dropModal(list)" >
                                                 Drop
@@ -57,7 +63,7 @@
                                                 Delete
                                                 </button>
                                             </div>
-                                        </td>
+                                        </td> -->
                                        
                                     </tr>
                                     <tr> 
@@ -80,160 +86,8 @@
                     </div>
                 </div>
             </div>
-             <div class="modal fade student">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h6>Student Info</h6>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                     <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">LRN</label>
-                                            <input class="form-control" v-model="post.lrn" type="text" placeholder="LRN" autofocus>
-                                            <span class="errors-material" v-if="errors.lrn">{{errors.lrn[0]}}</span>
-                                        </div>
-                                     </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">LAST NAME</label>
-                                            <input class="form-control" v-model="post.last_name" type="text" placeholder="Last name" autofocus>
-                                            <span class="errors-material" v-if="errors.last_name">{{errors.last_name[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">FIRST NAME</label>
-                                            <input class="form-control" v-model="post.first_name" type="text" placeholder="First name" >
-                                            <span class="errors-material" v-if="errors.last_name">{{errors.last_name[0]}}</span>
-                                        </div>
-                                         <div class="form-group col-md-4">
-                                            <label class="control-label">MIDDLE NAME</label>
-                                            <input class="form-control" v-model="post.middle_name" type="text" placeholder="Middle name">
-                                            <span class="errors-material" v-if="errors.middle_name">{{errors.middle_name[0]}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                       
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">GENDER</label>
-                                            <select class="form-control" v-model="post.gender">
-                                                <option :value="1">Male</option>
-                                                <option :value="2">Female</option>
-                                            </select>
-                                            <span class="errors-material" v-if="errors.gender">{{errors.gender[0]}}</span>
-                                        </div>
-                                
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">BIRTHDATE</label>
-                                            <Datepicker v-model="post.birthdate" :format="format"  placeholder="Birthdate" :change="setAge()"/>
-                                            <span class="errors-material" v-if="errors.birthdate">{{errors.birthdate[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">AGE</label>
-                                            <input class="form-control" readonly v-model="post.age" type="text" placeholder="Age">
-                                            <span class="errors-material" v-if="errors.age">{{errors.age[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label class="control-label">BIRTH PLACE</label>
-                                            <input class="form-control" v-model="post.birth_place" type="text" placeholder="Birth Place">
-                                            <span class="errors-material" v-if="errors.birth_place">{{errors.birth_place[0]}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">CIVIL STATUS</label>
-                                            <select class="form-control" v-model="post.civil_status">
-                                                <option :value="1">Single</option>
-                                                <option :value="2">Married</option>
-                                                <option :value="3">Legally Separated</option>
-                                                <option :value="4">Annulled</option>
-                                                <option :value="5">Widow/er</option>
-                                            </select>
-                                            <span class="errors-material" v-if="errors.civil_status">{{errors.civil_status[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">CITIZENSHIP</label>
-                                            <select class="form-control" v-model="post.citizenship">
-                                                <option :value="1">Filipino</option>
-                                                <option :value="2">Dual Citizen</option>
-                                                <option :value="3">Foreign National</option>
-                                            </select>
-                                            <span class="errors-material" v-if="errors.citizenship">{{errors.citizenship[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">RELIGION</label>
-                                            <input class="form-control" type="text" v-model="post.religion" placeholder="Religion">
-                                            <span class="errors-material" v-if="errors.religion">{{errors.religion[0]}}</span>                                
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">CONTACT</label>
-                                            <input class="form-control" v-model="post.contact" type="text" placeholder="Contact">
-                                            <span class="errors-material" v-if="errors.contact">{{errors.contact[0]}}</span>
-                                            
-                                        </div>
-                                        <div class="form-group col-md-8">
-                                            <label class="control-label">ADDRESS</label>
-                                            <input class="form-control" v-model="post.address" type="text" placeholder="Address">
-                                            <span class="errors-material" v-if="errors.address">{{errors.address[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">EMAIL</label>
-                                            <input class="form-control" v-model="post.email"  type="text" placeholder="Email">
-                                            <span class="errors-material" v-if="errors.email">{{errors.email[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label class="control-label">STUDENT TYPE</label>
-                                            <select class="form-control" v-model="post.student_type">
-                                                <option :value="1">JHS</option>
-                                                <option :value="2">SHS</option>
-                                            </select>
-                                            <span class="errors-material" v-if="errors.student_type">{{errors.student_type[0]}}</span>
-                                        </div>
-                                    </div>
-                            
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" @click="saveStudent()" :disabled="btndis" class="btn btn-primary">{{btncap}}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade delete-enroll">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h6>Delete</h6>
-                        </div>
-                        <div class="modal-body">
-                            <h4>Do you want to delete <strong>{{ post.lrn }}</strong>?</h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" @click="confirmDelete()" class="btn btn-danger" >Yes</button>  
-                            <button type="button" @click="cancel()" class="btn btn-secondary" >No</button>  
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade drop-enroll">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h6>Delete</h6>
-                        </div>
-                        <div class="modal-body">
-                            <h4>Do you want to Drop <strong>{{ post.lrn }}</strong>?</h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" @click="confirmDrop()" class="btn btn-danger" >Yes</button>  
-                            <button type="button" @click="cancel()" class="btn btn-secondary" >No</button>  
-                        </div>
-                    </div>
-                </div>
-            </div>
-     
+         
+        
         </main>
 </template>
 
@@ -277,8 +131,6 @@ export default {
         {label:'GRADE', name:null},
         {label:'SECTION', name:null},
         {label:'DATE', name:null},
-        {label:'STATUS', name:null},
-        {label:'ACTION', name:null},
        
         ];
         
@@ -286,9 +138,9 @@ export default {
             sortOrders[column.name] = -1;
         });
         return{
-            schoolyear:{},
             students:[],
             errors:[],
+            schoolyears:[],
             post:{},
             btncap:"Save",
             columns:columns,
@@ -298,7 +150,7 @@ export default {
             pass:{},
             tableData:{
                 draw:0,
-                length:10,
+                length:1000,
                 search:'',
                 column:0,
                 archive:0,
@@ -397,20 +249,21 @@ export default {
            
             
         },
-        listOfStudent(urls='api/enroll'){
+        listOfStudent(urls='api/enroll-history'){
             this.$axios.get('sanctum/csrf-cookie').then(response => {
                 this.tableData.draw ++;
                 this.$axios.get(urls,{params:this.tableData}).then(res=>{
                 let data = res.data;
                     if(this.tableData.draw == data.draw){
                         this.students = data.data.data;
+                        this.errors = [];
                         this.configPagination(data.data);
                     }else{
                         this.not_found = true;
                     }
                 
                 }).catch(err=>{
-                
+                     this.errors = err.response.data.errors
                 });
             });
         },
@@ -504,14 +357,17 @@ export default {
         },
         getSchoolYear(){
             this.$axios.get('sanctum/csrf-cookie').then(response=>{
-                this.$axios.get('api/get-active').then(res=>{
-                    this.schoolyear = res.data;
+                this.$axios.get('api/get-sy').then(res=>{
+                    this.schoolyears = res.data;
                 })
             });
         },
+        filterYear(){
+            this.listOfStudent();
+        }
     },
     mounted() {
-        this.listOfStudent();
+        // this.listOfStudent();
         this.getSchoolYear();
     },
 }

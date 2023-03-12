@@ -59,4 +59,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function enroll(){
+        return $this->hasMany(Enroll::class, 'user_id', 'id')->with('strand', 'sectiond');
+    }
+
+    public function shsgrade(){
+        return $this->hasMany(SHSGrade::class, 'user_id', 'id')->with('subjectd');
+    }
+
+    public function jhsgrade(){
+        return $this->hasMany(JHSGrade::class, 'user_id', 'id')->with('subjectd'); 
+    }
+
+
 }

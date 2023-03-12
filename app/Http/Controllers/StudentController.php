@@ -203,4 +203,21 @@ class StudentController extends Controller
 
         return response()->json($user, 200);
     }
+
+    public function listOfStudent(Request $request){
+        $length = $request->length;
+        $searchValue = $request->search;
+        $query = User::with('enroll','shsgrade','jhsgrade')->where('role', 0)->where('deleted', 0)->orderBy('last_name', 'asc');
+    
+        if($searchValue){
+            $query->where(function($query) use ($searchValue){
+                $query->where('last_name', 'like', '%'.$searchValue.'%')
+                ->orWhere('lrn', 'like', '%'.$searchValue.'%')
+                ->orWhere('first_name', 'like', '%'.$searchValue.'%')
+                ->orWhere('middle_name', 'like', '%'.$searchValue.'%');
+            });
+        }
+        $projects = $query->paginate($length);
+        return ['data'=>$projects, 'draw'=> $request->draw];
+    }
 }
