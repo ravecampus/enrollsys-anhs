@@ -40,8 +40,11 @@
                                                 <button class="btn btn-danger btn-sm" data-toggle="tooltip" @click="archiveStudent(list)" title="Archive">
                                                 <i class="fa fa-archive"></i>
                                                 </button>
-                                                 <button class="btn btn-warning btn-sm" data-toggle="tooltip" @click="passwordStudent(list)" title="Archive">
-                                                <i class="fa fa-lock"></i>
+                                                <button class="btn btn-warning btn-sm" data-toggle="tooltip" @click="passwordStudent(list)" title="Archive">
+                                                    <i class="fa fa-lock"></i>
+                                                </button>
+                                                <button class="btn btn-secondary btn-sm" data-toggle="tooltip" @click="viewStudent(list)" title="View">
+                                                    <i class="fa fa-eye"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -493,6 +496,9 @@ export default {
                     this.errors = err.response.data.errors
                 });
             });
+        },
+        viewStudent(list){
+            this.$router.push({name:'viewstudent', params:{'id':list.id}});
         }
     },
     mounted() {

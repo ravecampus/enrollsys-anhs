@@ -99,7 +99,9 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $stud = User::where('role', 0)->where('deleted', 0)->find($id);
+
+        return response()->json($stud, 200);
     }
 
     /**

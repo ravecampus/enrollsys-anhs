@@ -7,7 +7,7 @@
             </div>
         </div> -->
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12 d-print-none">
                     <div class="tile">
                         <h3 class="tile-title">Schedule</h3>
                         <div class="alert alert-danger p-0" v-if="errors.errs">
@@ -169,7 +169,67 @@
                         <div class="tile-title-w-btn" >
                         </div>
                         <div class="tile-body">
-                            <b>List of Schedule </b><br>
+                            
+                            <div class="row d-none d-print-block">
+                                <div class="col-md-6 col-print-6">
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 col-print-3 text-right pr-0">
+                                            STRAND :
+                                        </div>
+                                        <div class="col-md-9 col-print-9 b-text">
+                                            {{ extractStrand(post.strand) }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 col-print-3 text-right pr-0">
+                                            GRADE :
+                                        </div>
+                                        <div class="col-md-9 col-print-9 b-text">
+                                            {{ post.grade }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 col-print-3 text-right pr-0">
+                                            SECTION :
+                                        </div>
+                                        <div class="col-md-9 col-print-9 b-text">
+                                            {{ post.section_name }}
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                <div class="col-md-6 col-print-6">
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 col-print-3 text-right pr-0">
+                                            ADVISER :
+                                        </div>
+                                        <div class="col-md-9 col-print-9 b-text">
+                                            {{ post.advise }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 col-print-3 text-right pr-0">
+                                          SCHOOL YEAR :
+                                        </div>
+                                        <div class="col-md-9 col-print-9 b-text">
+                                            {{ schoolYearDisplay(post.school_year_tx) }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-3 col-print-3 text-right pr-0">
+                                            TERM :
+                                        </div>
+                                        <div class="col-md-9 col-print-9 b-text">
+                                            {{ extracTerm(post.term) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <b>List of Schedule </b>
+                            <button type="button" @click="printSched()" class="btn btn-primary btn-sm d-print-none">
+                                <i class="fa fa-print"></i> Print
+                            </button>
+                            <br>
                             <data-table class="mt-2" :columns="columns" :sortKey="sortKey" :sortOrders="sortOrders" @sort="sortBy">
                                 <tbody>
                                     <tr class="tr-shadow" v-for="(list, idx) in schedules" :key="idx">
@@ -180,7 +240,7 @@
                                         <td class="desc">{{ list.grade }}</td>
                                         <td class="desc">{{ list.sectiond.section_name }}</td>
                                         <td class="desc">{{ list.teacherd.first_name+" "+list.teacherd.last_name }}</td>
-                                        <td>
+                                        <td class="d-print-none">
                                             <div class="btn-group">
                                                 <button class="btn btn-primary btn-sm" data-toggle="tooltip" @click="editS(list)" title="Edit">
                                                     <i class="fa fa-pencil"></i> Edit
@@ -201,7 +261,12 @@
                                 </tbody>
                             </data-table>
                             <hr>
-                            <div class="col-md-12">
+                            <div class="row d-none d-print-block">
+                                <div class="col-md-12">
+                                    Printed Date : {{ formatDate(new Date()) }}
+                                </div>
+                            </div>
+                            <div class="col-md-12 d-print-none">
                                 <pagination :pagination="pagination"
                                     @prev="listOfSchedule(pagination.prevPageUrl)"
                                     @next="listOfSchedule(pagination.nextPageUrl)"
@@ -267,7 +332,7 @@ export default {
         {label:'Grade Level', name:null},
         {label:'Section', name:null},
         {label:'Teacher', name:null},
-        {label:'Action', name:null},
+        {label:'', name:null},
         ];
         
         columns.forEach(column=>{
@@ -302,7 +367,7 @@ export default {
             sortKey:'created_at',
             tableData:{
                 draw:0,
-                length:10,
+                length:100,
                 search:'',
                 column:0,
                 archive:0,
@@ -504,6 +569,7 @@ export default {
             this.post.advise = null;
             this.sections.forEach(val=>{
                 if(val.id == num){
+                      this.post.section_name = val.section_name;
                       this.post.adviser = val.adviser;
                       this.post.advise = val.advise.first_name+ " "+val.advise.last_name;
                 }
@@ -596,6 +662,28 @@ export default {
                 return data+ " - "+ num;
             }
            
+        },
+        printSched(){
+            window.print();
+        },
+        extractStrand(id){
+            let ret ="";
+            this.strands.forEach(val => {
+                if(val.id == id){
+                    ret = val.strand_code;
+                }
+            });
+            return id !=undefined ? ret : "None";
+        },
+        extracTerm(num){
+            return num == 1 ? "1st" : num == 2 ? "2nd" : "None";
+        },
+        formatDate(da){
+            let d = new Date(da);
+            const day =("0" + d.getDate()).slice(-2);
+            const month = ("0"+(d.getMonth()+1)).slice(-2);
+            const year =  d.getFullYear();
+            return  month+ "-" + day  + "-" + year;
         },
 
     },

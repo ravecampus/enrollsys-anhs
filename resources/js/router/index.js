@@ -23,6 +23,7 @@ import User from '../admin/User';
 import ClassList from '../admin/ClassList';
 import StudentRecord from '../admin/StudentRecord';
 import AdminProfile from '../admin/Profile';
+import ViewStudent from '../admin/ViewStudent';
 
 import Student from '../student/Mainpage';
 import Profile from '../student/Profile';
@@ -186,8 +187,11 @@ export const routes = [
                 name:'enrollmenthistory',
                 component: EnrollmentHistory  
             },
-    
-    
+            {
+                path:'view-student/:id',
+                name:'viewstudent',
+                component: ViewStudent  
+            },
     
         ]
 
@@ -226,6 +230,7 @@ const adminRoutes = [
     'juniorsubject',
     'schedule',
     'students',
+    'viewstudent',
     'studentsarchive',
     'jhsgrade',
     'shsgrade',
