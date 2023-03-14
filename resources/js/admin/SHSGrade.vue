@@ -9,11 +9,25 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="tile">
-                        <div class="tile-title-w-btn" >
+                        <div class="tile-title-w-btn d-print-none" >
                             <h3 class="title">All Items</h3>
                             <!-- <p><button type="button" @click="showModal()" class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add</button></p> -->
                         </div>
-                        <div class="row">
+
+                        <div class="row d-none d-print-block">
+                            <div class="col-md-12">
+                                <div class="text-center">
+                                    <div class="">Republic of the Philippines</div>
+                                    <div class="">Department of Education</div>
+                                    <i class="mb-2">{{ school.region }}</i>
+                                    <h6 class="mt-2">{{ school.division }}</h6>
+                                    <h5 class="mt-2">{{ school.school_name }}</h5>
+                                    <i class="">{{ school.address }}</i>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row d-print-none mb-2">
                             <!-- <div class="col-md-3">
                                 <input type="text" v-model="tableData.search" @input="listOfStudent()" class="form-control" placeholder="Search... (Last name, First Name, Middle Name, LRN)">
                             </div> -->
@@ -53,6 +67,10 @@
                                             <i class="fa fa-filter"></i>
                                             {{ btnload }}
                                         </button>
+                                        <button class="btn btn-outline-primary" @click="printGrade()" type="button">
+                                            <i class="fa fa-prnt"></i>
+                                            Print
+                                        </button>
                                      
                                     </div>
                                 </div>
@@ -63,18 +81,12 @@
                             </div> -->
                         </div>
                         <div class="tile-body">
-                            <b>List of Student </b><br>
+                            <b>Senior High Grade </b><br>
                             <!-- <router-link :to="{name:'studentsarchive'}">Archives</router-link> -->
-                            <data-table class="mt-2 table-bordered" :columns="columns" :sortKey="sortKey" :sortOrders="sortOrders" @sort="sortBy">
+                            <data-table class="mt-2" :columns="columns" :sortKey="sortKey" :sortOrders="sortOrders" @sort="sortBy">
                                 <tbody>
                                     <tr class="tr-shadow" v-for="(list, idx) in grades" :key="idx">
-                                         <td>
-                                            <div class="table-data-feature">
-                                                <button class="btn btn-primary btn-sm" data-toggle="tooltip" @click="showModal(list)" title="Edit">
-                                                <i class="fa fa-pencil"></i>
-                                                </button>
-                                            </div>
-                                        </td>
+                                        
                                         <td><strong class="text-success">{{ list.studentd.lrn }}</strong></td>
                                         <td>{{ list.studentd.last_name }}, {{ list.studentd.first_name }} {{ list.studentd.middle_name }}</td>
                                         <td>{{ list.subjectd.subject_code }}</td>
@@ -85,22 +97,33 @@
                                         <td>{{ list.average }}</td>
                                         <td>{{ extractRemark(list.remark) }}</td>
                                         <td>{{ extractTerm(list.term) }}</td>
+                                         <td class="d-print-none">
+                                            <div class="table-data-feature">
+                                                <button class="btn btn-primary btn-sm" data-toggle="tooltip" @click="showModal(list)" title="Edit">
+                                                <i class="fa fa-pencil"></i>
+                                                </button>
+                                            </div>
+                                        </td>
                                     </tr>
-                                    <tr> 
-                                        <td colspan="12" v-show="!noData(grades)">
+                                    <tr class="d-print-none" v-show="!noData(grades)"> 
+                                        <td colspan="12">
                                             No Result Found!
                                         </td>
                                     </tr>
-                                    <tr class="spacer"></tr>
                                 </tbody>
                             </data-table>
-                            <hr>
-                            <div class="col-md-12">
+                            <div class="col-md-12 d-print-none">
                                 <pagination :pagination="pagination"
                                     @prev="listOfGrade(pagination.prevPageUrl)"
                                     @next="listOfGrade(pagination.nextPageUrl)"
                                     v-show="noData(grades)">
                                 </pagination>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row d-none d-print-block">
+                            <div class="col-md-12">
+                                Printed Date : {{ formatDate(new Date()) }}
                             </div>
                         </div>
                     </div>
@@ -180,7 +203,7 @@ export default {
         
         let sortOrders = {};
         let columns =[
-            {label:'', name:null},
+            
             {label:'STUDENT ID', name:null},
             {label:'NAME', name:null},
             {label:'SUBJECT CODE', name:null},
@@ -191,12 +214,14 @@ export default {
             {label:'AVERAGE', name:null},
             {label:'REMARKS', name:null},
             {label:'TERM', name:null},
+            {label:'', name:null},
         ];
         
         columns.forEach(column=>{
             sortOrders[column.name] = -1;
         });
         return{
+            school:{},
             grades:[],
             errors:[],
             sections:[],
@@ -370,9 +395,20 @@ export default {
         },
         extractTerm(num){
             return num == 1 ? "1st" : num == 2 ? "2nd" :"";
+        },
+         getSchool(id){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('api/school/').then(res=>{
+                    this.school = res.data;
+                })
+            });
+        },
+        printGrade(){
+            window.print();
         }
     },
     mounted() {
+        this.getSchool();
     },
 }
 </script>

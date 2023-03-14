@@ -24,6 +24,7 @@ import ClassList from '../admin/ClassList';
 import StudentRecord from '../admin/StudentRecord';
 import AdminProfile from '../admin/Profile';
 import ViewStudent from '../admin/ViewStudent';
+import ViewEnrollment from '../admin/ViewEnrollment';
 
 import Student from '../student/Mainpage';
 import Profile from '../student/Profile';
@@ -192,6 +193,11 @@ export const routes = [
                 name:'viewstudent',
                 component: ViewStudent  
             },
+            {
+                path:'view-enrollment/:id',
+                name:'viewenrollment',
+                component: ViewEnrollment  
+            },
     
         ]
 
@@ -241,7 +247,8 @@ const adminRoutes = [
     'studentrecord',
     'adminprofile',
     'dashboard',
-    'enrollmenthistory'
+    'enrollmenthistory',
+    'viewenrollment',
      
 ];
 

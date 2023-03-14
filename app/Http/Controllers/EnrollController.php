@@ -227,7 +227,10 @@ class EnrollController extends Controller
      */
     public function show($id)
     {
-        //
+        $enroll = Enroll::with('sectiond','strand', 'sy', 'ensched')->select('enroll.*', 'users.first_name', 'users.last_name','users.middle_name','users.lrn')
+                ->join('users', 'users.id', '=', 'enroll.user_id')
+                ->where('enroll.id', $id)->first();
+        return response()->json($enroll, 200);
     }
 
     /**

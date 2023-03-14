@@ -56,6 +56,9 @@
                                                 <button class="btn btn-danger btn-sm" data-toggle="tooltip" @click="deleteEnroll(list)">
                                                 Delete
                                                 </button>
+                                                <button class="btn btn-primary btn-sm" data-toggle="tooltip" @click="viewEnroll(list)">
+                                                View
+                                                </button>
                                             </div>
                                         </td>
                                        
@@ -509,6 +512,9 @@ export default {
                 })
             });
         },
+        viewEnroll(data){
+            this.$router.push({name:'viewenrollment', params:{'id':data.id}});
+        }
     },
     mounted() {
         this.listOfStudent();
