@@ -9,22 +9,63 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
-                    <h3 class="tile-title">Schedule ({{ schoolYearDisplay(schoolyear.description) }})</h3>
-                    <div class="alert alert-danger p-0" v-if="errors.errs">
+                    <div class="text-center d-none d-print-block">
+                        <div class="">Republic of the Philippines</div>
+                        <div class="">Department of Education</div>
+                        <i class="mb-2">{{ school.region }}</i>
+                        <h6 class="mt-2">{{ school.division }}</h6>
+                        <h5 class="mt-2">{{ school.school_name }}</h5>
+                        <i class="">{{ school.address }}</i>
+                    </div>
+                    <div class="d-flex justify-content-between d-print-none">
+                        <h3 class="tile-title">Schedule ({{ schoolYearDisplay(schoolyear.description) }})</h3>
+                        <button type="button" class="btn btn-primary btn-sm" @click="printReport()">
+                            <i class="fa fa-print"></i>
+                            Print
+                        </button>
+                    </div>
+                    <div class="alert alert-danger p-0 d-print-none" v-if="errors.errs">
                         <div class="alert errors-material m-0">
                             <div v-if="errors.errs"><strong>*</strong>{{errors.errs[0]}}</div>
                         </div>
                     </div>
                     <hr>
+                    <div class="text-center d-none d-print-block">
+                        <h4>SCHEDULE</h4>
+                    </div>
+                    <hr>
                     <div class="tile-body" v-if="type == 1">
                         <div class="row" >
-                            <div class="col-md-4">
-                                <div class="mb-2"> STUDENT TYPE: <strong> {{ extractStudentType(enroll.student_type) }} </strong></div>
-                                <div class="mb-2 mt-3"> GRADE LEVEL: <strong> {{ enroll.grade }} </strong></div>
-                                <div class="mb-2"> SECTION: <strong> {{ section.section_name }}</strong></div>
+                            <div class="col-md-4 col-print-6">
+                                
+                                <div class="mb-2 mt-3"> LRN #: 
+                                    <strong> {{ user.LRN }} </strong>
+                                </div>
+                                <div class="mb-2"> 
+                                    NAME: 
+                                    <strong> {{ user.last_name }}, {{ user.first_name }} {{ user.middle_name }}
+                                        </strong>
+                                </div>
+                                 <div class="mb-2 mt-3"> 
+                                     GRADE LEVEL: 
+                                     <strong> {{ enroll.grade }} </strong>
+                                </div>
+                                 <div class="mb-2"> SECTION: 
+                                     <strong> {{ section.section_name }}</strong>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-print-4">
+                                <!-- <div class="mb-2"> STUDENT TYPE: <strong> {{ extractStudentType(enroll.student_type) }} </strong></div> -->
+                                 <div class="mb-2"> SCHOOL YEAR: 
+                                     <strong> {{  schoolYearDisplay(schoolyear.description) }}</strong>
+                                </div>
+                                <div class="mb-2"> TERM: 
+                                     <strong> {{  extractTerm(enroll.term) }}</strong>
+                                </div>
                             </div>
                         </div>
                         <hr>
+                       
                         <div class="col-md-12">
                             <!-- <small>Subject and Scheduled</small> -->
                             <div class="table-responsive">
@@ -59,12 +100,20 @@
                     <div class="tile-body"  v-if="type == 2">
                         <div class="row card card-body mb-2 shadow" v-for="(list, index) in enrolls" :key="index" >
                         <div class="col-md-12 row">
-                            <div class="col-md-4">
-                                <div class="mb-2"> STUDENT TYPE: <strong> {{ extractStudentType(list.student_type) }} </strong></div>
+                            <div class="col-md-4 col-print-6">
+                                <div class="mb-2"> LRN: 
+                                    <strong> {{ user.LRN }} </strong>
+                                </div>
+                                <div class="mb-2"> 
+                                    NAME: 
+                                    <strong> {{ user.last_name }}, {{ user.first_name }} {{ user.middle_name }}
+                                        </strong>
+                                </div>
+                                <!-- <div class="mb-2"> STUDENT TYPE: <strong> {{ extractStudentType(list.student_type) }} </strong></div> -->
                                 <div class="mb-2 mt-3"> GRADE LEVEL: <strong> {{ list.grade }} </strong></div>
                                 <div class="mb-2"> SECTION: <strong> {{ list.sectiond.section_name }}</strong></div>
                             </div>
-                             <div class="col-md-4">
+                             <div class="col-md-4 col-print-4">
                                 <div class="mb-2"> STRAND: <strong> {{ list.strand.strand_code }} ({{ list.strand.descriptive }}) </strong></div>
                                 <div class="mb-2 mt-3"> TERM: <strong> {{ extractTerm(list.term) }} </strong></div>
                             </div>
@@ -106,7 +155,13 @@
                         No Result Found!
                     </div>
                     <hr>
+                    <div class="row d-none d-print-block">
+                        <div class="col-md-12">
+                            Printed Date : {{ formatDate(new Date()) }}
+                        </div>
+                    </div>
                 </div>
+                 
             </div>
         </div>
      </main>
@@ -121,7 +176,7 @@ export default {
             grades:[],
             strands:[],
             sections:[],
-
+            school:{},
             section:{},
             enroll:{},
             enrolls:[],
@@ -293,17 +348,39 @@ export default {
             }
            
         },
+        getSchool(){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('api/school/').then(res=>{
+                    this.school = res.data;
+                })
+            });
+        },
+        extractTerm(num){
+            return num == 1 ? "1st" : num == 2 ? "2nd" :"None";
+        },
+        printReport(){
+            window.print();
+        },
+        formatDate(da){
+            let d = new Date(da);
+            const day =("0" + d.getDate()).slice(-2);
+            const month = ("0"+(d.getMonth()+1)).slice(-2);
+            const year =  d.getFullYear();
+            return  month+ "-" + day  + "-" + year;
+        },
 
     },
     mounted() {
         // console.log(window.Laravel.user)
         let data = window.Laravel.user;
+        this.user = data;
         this.specifyGrade(data.student_type);
         this.user = data;
         this.filterData.type = data.student_type;
         this.getStrand();
         this.getSchoolYear();
         this.getAuthEnroll();
+        this.getSchool();
 
     },
 }

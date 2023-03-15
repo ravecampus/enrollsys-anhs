@@ -11,8 +11,17 @@
                       
                     <div class="tile">
                         <div class="row">
-                            
-                            <div class="col-md-3">
+                            <div class="col-md-12">
+                                <div class="text-center d-none d-print-block">
+                                    <div class="">Republic of the Philippines</div>
+                                    <div class="">Department of Education</div>
+                                    <i class="mb-2">{{ school.region }}</i>
+                                    <h6 class="mt-2">{{ school.division }}</h6>
+                                    <h5 class="mt-2">{{ school.school_name }}</h5>
+                                    <i class="">{{ school.address }}</i>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-print-none">
                                 <label>Grade</label>
                                 <select class="form-control" placeholder="Section" v-model="tableData.grade" @click="gradeLevel(tableData.grade)">
                                     <option :value="7">7</option>
@@ -23,13 +32,13 @@
                                     <option :value="12">12</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3 d-print-none">
                                 <label>Section</label>
                                 <select class="form-control" placeholder="Section" v-model="tableData.section">
                                     <option v-for="(ls, idx) in sections" :key="idx" :value="ls.id">{{ ls.section_name }}</option>
                                 </select>
                             </div>
-                            <div class="col-md-3" v-if="senior">
+                            <div class="col-md-2 d-print-none" v-if="senior">
                                 <label>Term</label>
                                 <div class="input-group">
                                     <select class="form-control" placeholder="Section" v-model="tableData.term">
@@ -40,7 +49,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-5 d-print-none">
                                 <label>Subject</label>
                                 <div class="input-group">
                                     
@@ -52,6 +61,10 @@
                                             <i class="fa fa-filter"></i>
                                             {{ btnload }}
                                         </button>
+                                        <button class="btn btn-outline-primary" @click="printClassList()" type="button">
+                                            <i class="fa fa-print"></i>
+                                            Print
+                                        </button>
                                      
                                     </div>
                                 </div>
@@ -59,19 +72,23 @@
                           
                         </div>
                         <hr>
+                        <div class="text-center d-none d-print-block">
+                            <h4>CLASS LIST</h4>
+                        </div>
+                        <hr class="d-none d-print-block">
                             <li class="errors-material" v-if="errors.grade">{{errors.grade[0]}}</li>
                             <li class="errors-material" v-if="errors.section">{{errors.section[0]}}</li>
                             <li class="errors-material" v-if="errors.term">{{errors.term[0]}}</li>
                             <li class="errors-material" v-if="errors.subject">{{errors.subject[0]}}</li>
-                        <div class="tile-body mt-5" v-if="schedule.id != undefined">
+                        <div class="tile-body mt-2" v-if="schedule.id != undefined">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-print-6">
                                     <!-- <small>Student Information</small> -->
                                     <div class="mb-2 mt-3"> YEAR LEVEL: <strong> {{ schedule.grade }} </strong></div>
                                     <div class="mb-2"> SECTION: <strong> {{ schedule.sectiond.section_name }} </strong></div>
                                     <div class="mb-2"> TEACHER NAME: <strong> {{ schedule.teacherd.first_name }}, {{ schedule.teacherd.last_name}}</strong></div>
                                 </div>
-                                 <div class="col-md-4">
+                                 <div class="col-md-4 col-print-4">
                                     <div class="mb-2 mt-3"> SUBJECT: <strong> {{ schedule.subjectd.subject_code }} </strong></div>
                                     <div class="mb-2"> SCHOOL YEAR: <strong> {{ schoolYearDisplay(schedule.school_year.description) }} </strong></div>
                                     <div class="mb-2"> TERM: <strong> {{ extractTerm(schedule.term) }}</strong></div>
@@ -100,6 +117,11 @@
                                 </tbody>
                             </data-table>
                             <hr>
+                            <div class="row d-none d-print-block">
+                                <div class="col-md-12">
+                                    Printed Date : {{ formatDate(new Date()) }}
+                                </div>
+                            </div>
                         </div>
                         <div class="text-centr" v-if="schedule.id == undefined">
                             No Result Found!
@@ -170,6 +192,7 @@ export default {
             sortOrders:sortOrders,
             sortKey:'created_at',
             pass:{},
+            school:{},
             tableData:{
                 draw:0,
                 search:'',
@@ -274,10 +297,20 @@ export default {
         },
         extractTerm(num){
             return num == 1 ? "1st" : num == 2 ? "2nd" :"None";
+        },
+        getSchool(){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('api/school/').then(res=>{
+                    this.school = res.data;
+                })
+            });
+        },
+        printClassList(){
+            window.print();
         }
     },
     mounted() {
-  
+        this.getSchool();
     },
 }
 </script>
