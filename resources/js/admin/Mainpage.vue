@@ -56,6 +56,7 @@
           <ul class="treeview-menu">
             <li><router-link class="treeview-item" :to="{name:'school'}"><i class="icon fa fa-circle-o"></i> School Setting</router-link></li>
             <li><router-link class="treeview-item" :to="{name:'user'}"><i class="icon fa fa-circle-o"></i> User Setting</router-link></li>
+            <li><router-link class="treeview-item" :to="{name:'transactionlog'}"><i class="icon fa fa-circle-o"></i> Transaction Log</router-link></li>
             <!-- <li><router-link class="treeview-item" :to="{name:'user'}"><i class="icon fa fa-circle-o"></i> User</router-link></li> -->
           </ul>
         </li>

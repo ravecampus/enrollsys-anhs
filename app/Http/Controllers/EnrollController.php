@@ -11,6 +11,7 @@ use App\Models\SchoolYear;
 use App\Models\Enroll;
 use App\Models\EnrollSched;
 use App\Models\Schedule;
+use App\Models\TransactionLog;
 use Illuminate\Support\Facades\Auth;
 
 class EnrollController extends Controller
@@ -62,6 +63,11 @@ class EnrollController extends Controller
     public function store(Request $request)
     {
         $auth = Auth::id();
+        TransactionLog::create([
+            'user_id'=>$auth,
+            'event'=>'Enrollment',
+            'data' => 'has been enrolled on Grade '.$request->grade
+             ]);
         $congrade = Enroll::where('user_id', $auth)->where('grade', $request->grade)->first();
         if(isset($congrade) && ($request->student_type == 1)){
             $errors = ['errors'=>['grade' => ['You Already take that GRADE LEVEL!']]];

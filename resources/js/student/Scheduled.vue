@@ -19,10 +19,12 @@
                     </div>
                     <div class="d-flex justify-content-between d-print-none">
                         <h3 class="tile-title">Schedule ({{ schoolYearDisplay(schoolyear.description) }})</h3>
-                        <button type="button" class="btn btn-primary btn-sm" @click="printReport()">
-                            <i class="fa fa-print"></i>
-                            Print
-                        </button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-sm" @click="printReport()">
+                                <i class="fa fa-print"></i>
+                                Print
+                            </button>
+                        </div>
                     </div>
                     <div class="alert alert-danger p-0 d-print-none" v-if="errors.errs">
                         <div class="alert errors-material m-0">

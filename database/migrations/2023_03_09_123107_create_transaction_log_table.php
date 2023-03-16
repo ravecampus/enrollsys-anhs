@@ -15,10 +15,10 @@ class CreateTransactionLogTable extends Migration
     {
         Schema::create('transaction_log', function (Blueprint $table) {
             $table->id();
-            $this->integer('user_id')->nullable();
-            $this->integer('type')->nullable();
-            $this->string('event')->nullable();
-            $this->text('data')->nullable();
+            $table->integer('user_id')->nullable();
+            $table->integer('type')->nullable();
+            $table->string('event')->nullable();
+            $table->text('data')->nullable();
             $table->timestamps();
         });
     }

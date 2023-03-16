@@ -25,6 +25,7 @@ import StudentRecord from '../admin/StudentRecord';
 import AdminProfile from '../admin/Profile';
 import ViewStudent from '../admin/ViewStudent';
 import ViewEnrollment from '../admin/ViewEnrollment';
+import TransactionLog from '../admin/TransactionLog';
 
 import Student from '../student/Mainpage';
 import Profile from '../student/Profile';
@@ -198,6 +199,11 @@ export const routes = [
                 name:'viewenrollment',
                 component: ViewEnrollment  
             },
+            {
+                path:'transaction-log',
+                name:'transactionlog',
+                component: TransactionLog  
+            },
     
         ]
 
@@ -249,6 +255,7 @@ const adminRoutes = [
     'dashboard',
     'enrollmenthistory',
     'viewenrollment',
+    'transactionlog',
      
 ];
 

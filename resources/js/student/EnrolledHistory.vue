@@ -7,14 +7,26 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-12 col-print-12 mt-5">
+                    <div class="text-center d-none d-print-block">
+                        <div class="">Republic of the Philippines</div>
+                        <div class="">Department of Education</div>
+                        <i class="mb-2">{{ school.region }}</i>
+                        <h6 class="mt-2">{{ school.division }}</h6>
+                        <h5 class="mt-2">{{ school.school_name }}</h5>
+                        <i class="">{{ school.address }}</i>
+                    </div>
+                </div>
                 <div class="col-md-12" v-if="post.id != undefined">
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-print-6">
                                     <div class="mb-2 mt-3">LRN: <strong> {{ post.lrn }} </strong></div>
                                     <div class="mb-2"> NAME: <strong> {{ post.last_name }}, {{ post.first_name }} {{ post.middle_name }} </strong></div>
                                     <div class="mb-2"> GENDER: <strong> {{ extractGender(post.gender) }}</strong></div>
+                                </div>
+                                <div class="col-md-6 col-print-6">
                                     <div class="mb-2 mt-3"> CONTACT: <strong> {{ post.contact }} </strong></div>
                                     <div class="mb-2"> ADDRESS: <strong> {{ post.address }} </strong></div>
                                 </div>
@@ -24,7 +36,7 @@
                 </div>
                 <div class="col-md-12" v-if="post.id != undefined">
                     <div class="card">
-                        <div class="col-md-4 mt-3">    
+                        <div class="col-md-4 mt-3 d-print-none">    
                             SCHOOL YEAR: 
                             <div class="input-group">
                                 <select class="form-control" v-model="post.sy">
@@ -34,6 +46,10 @@
                                     <button class="btn btn-outline-primary" @click="filterYear()" type="button">
                                         <i class="fa fa-filter"></i>
                                         {{ btnload }}
+                                    </button>
+                                     <button class="btn btn-outline-primary" @click="printData()" type="button">
+                                        <i class="fa fa-print"></i>
+                                        Print
                                     </button>
                                 </div>
                             </div>
@@ -47,7 +63,7 @@
                                     <div class="mb-2"> ADVISER: <strong> {{ data.adviser }} </strong></div>
                                     <div class="mb-2"> STRAND: <strong> {{ data.strand }} </strong></div>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered border-black">
                                             <thead>
                                                 <tr>
                                                     <th>SUBJECT</th>
@@ -131,7 +147,12 @@
                                     </table>
                                 </div>
                         </div>
-                        
+                         <hr>
+                        <div class="row d-none d-print-block">
+                            <div class="col-md-12">
+                                Printed Date : {{ formatDate(new Date()) }}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -183,6 +204,7 @@ export default {
         return{
             schoolyears:[],
             view_senior: true,
+            school:{},
             post:{},
             user:{},
             sections:[],
@@ -404,12 +426,23 @@ export default {
                     // console.log(res.data)
                 })
             });
+        },
+        getSchool(){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('api/school/').then(res=>{
+                    this.school = res.data;
+                })
+            });
+        },
+        printData(){
+            window.print();
         }
     },
     mounted() {
         this.getAuthUser();
         // this.getSchoolYear()
         this.getAuthYear();
+        this.getSchool();
 
     },
 }
