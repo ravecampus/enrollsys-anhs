@@ -9,16 +9,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="tile">
-                        <!-- <div class="overlay" v-if="teachers.length == 0">
-                            <div class="m-loader mr-4">
-                                <svg class="m-circular" viewBox="25 25 50 50">
-                                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="4" stroke-miterlimit="10"/>
-                                </svg>
-                            </div>
-                            <h3 class="l-text">Loading</h3>
-                        </div> -->
+                      
                         <div class="tile-title-w-btn" >
-                            <!-- <h3 class="title">All Items</h3> -->
                             <p><button type="button" @click="showModal()" class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add</button></p>
                         </div>
                         <div class="row mb-3">
@@ -50,8 +42,9 @@
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <button class="btn btn-warning btn-sm" data-toggle="tooltip" @click="dropModal(list)" >
-                                                Drop
+                                                
+                                                <button class="btn btn-sm" :class="list.status == 1 ? 'btn-warning' :'btn-primary'" data-toggle="tooltip" @click="dropModal(list)" >
+                                                {{ list.status == 1 ? "Drop" : "Enroll" }}
                                                 </button>
                                                 <button class="btn btn-danger btn-sm" data-toggle="tooltip" @click="deleteEnroll(list)">
                                                 Delete
@@ -224,10 +217,10 @@
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h6>Delete</h6>
+                            <h6>{{ this.post.status == 1 ? 'Drop' : 'Enroll'}}</h6>
                         </div>
                         <div class="modal-body">
-                            <h4>Do you want to Drop <strong>{{ post.lrn }}</strong>?</h4>
+                            <h4>Do you want to {{ this.post.status == 1 ? 'Drop': 'Enroll' }} <strong>{{ post.lrn }}</strong>?</h4>
                         </div>
                         <div class="modal-footer">
                             <button type="button" @click="confirmDrop()" class="btn btn-danger" >Yes</button>  
@@ -336,6 +329,10 @@ export default {
             this.post = data;
             $('.drop-enroll').modal('show');
         },
+        enrollModal(data){
+            this.post = data;
+            $('.drop-enroll').modal('show');
+        },
         confirmDelete(){
             this.$axios.get('sanctum/csrf-cookie').then(response=>{
                 this.$axios.delete('api/enroll/'+this.post.id).then(res=>{
@@ -350,6 +347,11 @@ export default {
 
          confirmDrop(){
             this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                if(this.post.status == 1){
+                    this.post.status = 2
+                }else if(this.post.status == 2){
+                    this.post.status = 1;
+                }
                 this.$axios.post('api/enroll-drop/', this.post).then(res=>{
                     this.post = {};
                     this.$emit('show',{'message':'Enrollment has been moved to archive!'});

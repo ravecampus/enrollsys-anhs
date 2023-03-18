@@ -63,11 +63,7 @@ class EnrollController extends Controller
     public function store(Request $request)
     {
         $auth = Auth::id();
-        TransactionLog::create([
-            'user_id'=>$auth,
-            'event'=>'Enrollment',
-            'data' => 'has been enrolled on Grade '.$request->grade
-             ]);
+       
         $congrade = Enroll::where('user_id', $auth)->where('grade', $request->grade)->first();
         if(isset($congrade) && ($request->student_type == 1)){
             $errors = ['errors'=>['grade' => ['You Already take that GRADE LEVEL!']]];
@@ -219,6 +215,14 @@ class EnrollController extends Controller
             }
 
         }
+
+        if(isset($enroll)){
+            TransactionLog::create([
+                'user_id'=>Auth::id(),
+                'event'=>'Enrollment',
+                'data' => 'has been enrolled on Grade '.$request->grade
+                 ]);
+        }
         return response()->json($enroll, 200);
 
 
@@ -276,6 +280,13 @@ class EnrollController extends Controller
         $jhs = JHSGrade::where('user_id', $enr->user_id)->delete();
         $jhs = SHSGrade::where('user_id', $enr->user_id)->delete();
         $enr->delete();
+        if($enr->delete()){
+            TransactionLog::create([
+                'user_id'=>Auth::id(),
+                'event'=>'Deleted',
+                'data' => 'Enrollment has been deleted'.$enr->id
+                 ]);
+        }
 
         return response()->json($enr, 200);
     }
@@ -308,8 +319,23 @@ class EnrollController extends Controller
 
     public function dropEnr(Request $request){
         $enrl = Enroll::find($request->id);
-        $enrl->status = 2;
+        $enrl->status = $request->status;
         $enrl->save();
+
+        if(isset($enrl)){
+            if($request->status == 1){
+                $ev = "Enrolled";
+                $enr = "Set as enrolled";
+            }else{
+                $ev = "Dropped";
+                $enr = "Set as dropped";
+            }
+            TransactionLog::create([
+                'user_id'=>Auth::id(),
+                'event'=>$ev,
+                'data' => $enr
+                 ]);
+        }
 
         return response()->json($enrl, 200);
     }

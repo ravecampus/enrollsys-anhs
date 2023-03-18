@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\TransactionLog;
 use Carbon\Carbon;
 
 class StudentController extends Controller
@@ -87,6 +89,14 @@ class StudentController extends Controller
             'email' => $request->email,
             'student_type' => $request->student_type,
         ]);
+        if(isset($user)){
+            $auth = Auth::id();
+            TransactionLog::create([
+            'user_id'=>$auth,
+            'event'=>'Added',
+            'data' => 'Student has been added '.$request->last_name.', '.$request->first_name
+             ]);
+        }
 
         return response()->json($user, 200);
     }
@@ -174,6 +184,14 @@ class StudentController extends Controller
         $user = User::find($id);
         $user->deleted = 1;
         $user->save();
+        if(isset($user)){
+            $auth = Auth::id();
+            TransactionLog::create([
+            'user_id'=>$auth,
+            'event'=>'Archive',
+            'data' => 'Student has been move to archive!'
+             ]);
+        }
 
         return response()->json($user, 200);
     }
@@ -202,6 +220,14 @@ class StudentController extends Controller
         $user = User::find($request->id);
         $user->deleted = 0;
         $user->save();
+        if(isset($user)){
+            $auth = Auth::id();
+            TransactionLog::create([
+            'user_id'=>$auth,
+            'event'=>'Restore',
+            'data' => 'Student has been restored!'
+             ]);
+        }
 
         return response()->json($user, 200);
     }

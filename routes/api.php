@@ -18,7 +18,7 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassListController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\TransactionLogController;
+use App\Http\Controllers\TransactionController;
 
 
 /*
@@ -81,7 +81,7 @@ Route::resource('class-list', ClassListController::class);
 Route::get('student-list', [StudentController::class, 'listOfStudent']);
 Route::get('auth-user', [AuthController::class, 'authUser']);
 Route::get('auth-year', [EnrollController::class, 'authEnrollYear']);
-Route::resource('transaction-log', TransactionLogController::class);
+Route::resource('transaction-log', TransactionController::class);
 
 
 Route::middleware('auth:sanctum')->group(function () {

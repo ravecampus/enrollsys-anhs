@@ -11,4 +11,8 @@ class TransactionLog extends Model
 
     protected $table = 'transaction_log';
     protected $fillable = ['user_id', 'event', 'type', 'data'];
+
+    public function usercon(){
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }

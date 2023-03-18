@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\TransactionLog;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginRequest;
 use Session;
@@ -77,6 +78,14 @@ class AuthController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
+        if(isset($user)){
+            $auth = Auth::id();
+            TransactionLog::create([
+            'user_id'=>$auth,
+            'event'=>'Register',
+            'data' => 'has been Register!'
+             ]);
+        }
         return response()->json($user, 200);
 
     }

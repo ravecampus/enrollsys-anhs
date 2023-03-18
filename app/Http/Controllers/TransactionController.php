@@ -20,15 +20,15 @@ class TransactionController extends Controller
         // $column = $request->column;
         // $dir = $request->dir;
         // $searchValue = $request->search;
-        $query = TransactionLog::orderBy('created_at', 'desc');
+        $query = TransactionLog::with('usercon')->orderBy('created_at', 'desc');
     
-        if($searchValue){
-            $query->where(function($query) use ($searchValue){
-                // $query->where('last_name', 'like', '%'.$searchValue.'%')
-                // ->orWhere('first_name', 'like', '%'.$searchValue.'%')
-                // ->orWhere('middle_name', 'like', '%'.$searchValue.'%');
-            });
-        }
+        // if($searchValue){
+        //     $query->where(function($query) use ($searchValue){
+        //         $query->where('last_name', 'like', '%'.$searchValue.'%')
+        //         ->orWhere('first_name', 'like', '%'.$searchValue.'%')
+        //         ->orWhere('middle_name', 'like', '%'.$searchValue.'%');
+        //     });
+        // }
         $projects = $query->paginate(10);
         return response()->json($projects, 200);
     }

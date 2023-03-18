@@ -9,6 +9,8 @@ use App\Models\Strand;
 use App\Models\Section;
 use App\Models\Subject;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\TransactionLog;
 use Illuminate\Support\Facades\Log;
 
 class ScheduleController extends Controller
@@ -172,6 +174,15 @@ class ScheduleController extends Controller
             't_to' => $to->format('H:i:s'),
             'teacher' => $request->teacher,
         ]);
+
+         if(isset($sched)){
+            $auth = Auth::id();
+            TransactionLog::create([
+            'user_id'=>$auth,
+            'event'=>'Schedule',
+            'data' => 'Schedule has been added'
+             ]);
+        }
 
         return response()->json($sched, 200);
     }
