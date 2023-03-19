@@ -145,10 +145,11 @@ class ScheduleController extends Controller
                 ->whereTime('t_to','>=', $frm)
                 ->whereTime('t_to','<=', $to)
                 ->first();
-
-        $reqday = json_decode($request->days);
-        $dbday = json_decode($con->day);
-
+        if(isset($con)){
+            $reqday = json_decode($request->days);
+            $dbday = json_decode($con->day);
+        }
+    
         if(isset($con)){
             $data = array_intersect($reqday, $dbday);
             if(count($data) > 0){
