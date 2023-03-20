@@ -98,7 +98,7 @@ class StrandController extends Controller
             ]);
         $strand = Strand::find($id);
         $strand->strand_code = $request->strand_code;
-        $strand->description = $request->descriptive;
+        $strand->descriptive = $request->descriptive;
         $strand->save();
         
         return response()->json($strand, 200);

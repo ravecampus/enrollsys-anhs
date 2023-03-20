@@ -38,7 +38,7 @@
                                     <div class="form-group row" v-if="senior">
                                         <label class="control-label col-md-3">Strand</label>
                                         <div class="col-md-8 p-0">
-                                            <select class="form-control form-control-sm" v-model="post.strand">
+                                            <select class="form-control form-control-sm" v-model="post.strand" @change="filterStrand()">
                                                 <option v-for="(ls, idx) in strands" :key="idx" :value="ls.id">{{ ls.strand_code}}</option>
                                             </select>
                                             <span class="errors-material" v-if="errors.strand">{{errors.strand[0]}}</span>
@@ -685,6 +685,9 @@ export default {
             const year =  d.getFullYear();
             return  month+ "-" + day  + "-" + year;
         },
+        filterStrand(){
+             this.listOfSchedule();
+        }
 
     },
     mounted() {

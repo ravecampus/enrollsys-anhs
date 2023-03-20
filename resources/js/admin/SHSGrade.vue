@@ -88,7 +88,9 @@
                                     <tr class="tr-shadow" v-for="(list, idx) in grades" :key="idx">
                                         
                                         <td><strong class="text-success">{{ list.studentd.lrn }}</strong></td>
-                                        <td>{{ list.studentd.last_name }}, {{ list.studentd.first_name }} {{ list.studentd.middle_name }}</td>
+                                        <td>{{ list.studentd.last_name }}, {{ list.studentd.first_name }} 
+                                            <!-- {{ list.studentd.middle_name }} -->
+                                            </td>
                                         <td>{{ list.subjectd.subject_code }}</td>
                                         <td>{{ list.subjectd.descriptive_title }}</td>
                                         <td>{{ list.subjectd.unit }}</td>
@@ -204,7 +206,7 @@ export default {
         let sortOrders = {};
         let columns =[
             
-            {label:'STUDENT ID', name:null},
+            {label:'LRN #', name:null},
             {label:'NAME', name:null},
             {label:'SUBJECT CODE', name:null},
             {label:'TITLE', name:null},

@@ -222,6 +222,7 @@ export default {
             return data == undefined ? true : (data.length > 0) ? true : false;
         },
         editS(data){
+            console.log(data)
             this.post = data;
         },
         newS(){

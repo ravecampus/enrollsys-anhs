@@ -76,15 +76,11 @@
                             <data-table class="mt-2 table" :columns="columns" :sortKey="sortKey" :sortOrders="sortOrders" @sort="sortBy">
                                 <tbody>
                                     <tr class="tr-shadow" v-for="(list, idx) in grades" :key="idx">
-                                         <td>
-                                            <div class="table-data-feature">
-                                                <button class="btn btn-primary btn-sm" data-toggle="tooltip" @click="showModal(list)" title="Edit">
-                                                <i class="fa fa-pencil"></i>
-                                                </button>
-                                            </div>
-                                        </td>
+                                        
                                         <td><strong class="text-success">{{ list.studentd.lrn }}</strong></td>
-                                        <td>{{ list.studentd.last_name }}, {{ list.studentd.first_name }} {{ list.studentd.middle_name }}</td>
+                                        <td>{{ list.studentd.last_name }}, {{ list.studentd.first_name }} 
+                                            <!-- {{ list.studentd.middle_name }} -->
+                                            </td>
                                         <td>{{ list.subjectd.subject_code }}</td>
                                         <td>{{ list.subjectd.descriptive_title }}</td>
                                         <td>{{ list.subjectd.unit }}</td>
@@ -94,6 +90,13 @@
                                         <td>{{ list.fourth_grade }}</td>
                                         <td>{{ list.average }}</td>
                                         <td>{{ extractRemark(list.remark) }}</td>
+                                        <td>
+                                            <div class="table-data-feature d-print-none">
+                                                <button class="btn btn-primary btn-sm" data-toggle="tooltip" @click="showModal(list)" title="Edit">
+                                                <i class="fa fa-pencil"></i>
+                                                </button>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr> 
                                         <td colspan="12" v-show="!noData(grades)">
@@ -204,8 +207,7 @@ export default {
         
         let sortOrders = {};
         let columns =[
-        {label:'', name:null},
-        {label:'STUDENT ID', name:null},
+        {label:'LRN #', name:null},
         {label:'NAME', name:null},
         {label:'SUBJECT CODE', name:null},
         {label:'TITLE', name:null},
@@ -216,6 +218,7 @@ export default {
         {label:'4TH GRADE', name:null},
         {label:'AVERAGE', name:null},
         {label:'REMARKS', name:null},
+        {label:'', name:null},
        
         ];
         
