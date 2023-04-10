@@ -42,7 +42,9 @@
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                
+                                                <button class="btn btn-info btn-sm" v-if="list.status == 0" data-toggle="tooltip" @click="acceptEnroll(list)">
+                                                Accept
+                                                </button>
                                                 <button class="btn btn-sm" :class="list.status == 1 ? 'btn-warning' :'btn-primary'" data-toggle="tooltip" @click="dropModal(list)" >
                                                 {{ list.status == 1 ? "Drop" : "Enroll" }}
                                                 </button>
@@ -76,123 +78,95 @@
                     </div>
                 </div>
             </div>
-             <div class="modal fade student">
+             <div class="modal fade enrolled">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h6>Student Info</h6>
+                            <h6>Enrollment</h6>
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-12">
-                                     <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">LRN</label>
-                                            <input class="form-control" v-model="post.lrn" type="text" placeholder="LRN" autofocus>
-                                            <span class="errors-material" v-if="errors.lrn">{{errors.lrn[0]}}</span>
-                                        </div>
-                                     </div>
+                                <div class="col-12">
+                                    <small>Student Information</small>
+                                    <div class="mb-2 mt-3"> STUDENT ID: <strong> {{ user.lrn }} </strong></div>
+                                    <div class="mb-2"> NAME: <strong> {{ user.last_name }}, {{ user.first_name }} {{ user.middle_name}} </strong></div>
+                                    <div class="mb-2"> STUDENT TYPE: <strong> {{ extractStudentType(user.student_type) }} </strong></div>
+                                </div>
+                                <hr>
+                                <div class="col-12">
                                     <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">LAST NAME</label>
-                                            <input class="form-control" v-model="post.last_name" type="text" placeholder="Last name" autofocus>
-                                            <span class="errors-material" v-if="errors.last_name">{{errors.last_name[0]}}</span>
+                                     
+                                        <div class="col-md-3">
+                                            <!-- <small>Enrollment Information</small> -->
+                                            <div class="mb-2 mt-3"> GRADE LEVEL: 
+                                                <select v-model="enroll.grade" class="form-control form-control-sm" @change="gradeLevel(enroll.grade)">
+                                                    <option v-for="(ls, idx) in grades" :key="idx">{{ ls.val }}</option>
+                                                </select>
+                                                <span class="errors-material" v-if="errors.grade">{{errors.grade[0]}}</span>
+                                            </div>
+                                            <div class="mb-2"> SECTION: 
+                                                <select v-model="enroll.section" class="form-control form-control-sm" @change="getSchedule()">
+                                                    <option v-for="(ls, idx) in sections" :key="idx" :value="ls.id">{{ ls.section_name }}</option>
+                                                </select>
+                                                <span class="errors-material" v-if="errors.section">{{errors.section[0]}}</span>
+                                            </div>
                                         </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">FIRST NAME</label>
-                                            <input class="form-control" v-model="post.first_name" type="text" placeholder="First name" >
-                                            <span class="errors-material" v-if="errors.last_name">{{errors.last_name[0]}}</span>
-                                        </div>
-                                         <div class="form-group col-md-4">
-                                            <label class="control-label">MIDDLE NAME</label>
-                                            <input class="form-control" v-model="post.middle_name" type="text" placeholder="Middle name">
-                                            <span class="errors-material" v-if="errors.middle_name">{{errors.middle_name[0]}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                       
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">GENDER</label>
-                                            <select class="form-control" v-model="post.gender">
-                                                <option :value="1">Male</option>
-                                                <option :value="2">Female</option>
-                                            </select>
-                                            <span class="errors-material" v-if="errors.gender">{{errors.gender[0]}}</span>
-                                        </div>
-                                
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">BIRTHDATE</label>
-                                            <Datepicker v-model="post.birthdate" :format="format"  placeholder="Birthdate" :change="setAge()"/>
-                                            <span class="errors-material" v-if="errors.birthdate">{{errors.birthdate[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">AGE</label>
-                                            <input class="form-control" readonly v-model="post.age" type="text" placeholder="Age">
-                                            <span class="errors-material" v-if="errors.age">{{errors.age[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label class="control-label">BIRTH PLACE</label>
-                                            <input class="form-control" v-model="post.birth_place" type="text" placeholder="Birth Place">
-                                            <span class="errors-material" v-if="errors.birth_place">{{errors.birth_place[0]}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">CIVIL STATUS</label>
-                                            <select class="form-control" v-model="post.civil_status">
-                                                <option :value="1">Single</option>
-                                                <option :value="2">Married</option>
-                                                <option :value="3">Legally Separated</option>
-                                                <option :value="4">Annulled</option>
-                                                <option :value="5">Widow/er</option>
-                                            </select>
-                                            <span class="errors-material" v-if="errors.civil_status">{{errors.civil_status[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">CITIZENSHIP</label>
-                                            <select class="form-control" v-model="post.citizenship">
-                                                <option :value="1">Filipino</option>
-                                                <option :value="2">Dual Citizen</option>
-                                                <option :value="3">Foreign National</option>
-                                            </select>
-                                            <span class="errors-material" v-if="errors.citizenship">{{errors.citizenship[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">RELIGION</label>
-                                            <input class="form-control" type="text" v-model="post.religion" placeholder="Religion">
-                                            <span class="errors-material" v-if="errors.religion">{{errors.religion[0]}}</span>                                
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">CONTACT</label>
-                                            <input class="form-control" v-model="post.contact" type="text" placeholder="Contact">
-                                            <span class="errors-material" v-if="errors.contact">{{errors.contact[0]}}</span>
+                                        <div class="col-md-3" v-if="senior">
+                                            <div class="mb-2 mt-3"> STRAND: 
+                                                <select class="form-control form-control-sm" v-model="enroll.strand"  @change="getSchedule()">
+                                                    <option v-for="(ls,idx) in strands" :key="idx" :value="ls.id">{{ ls.strand_code }}</option>
+                                                </select>
+                                                <span class="errors-material" v-if="errors.strand">{{errors.strand[0]}}</span>
+                                            </div>
+                                            <div class="mb-2"> TERM: 
+                                                <select class="form-control form-control-sm" v-model="enroll.term"  @change="getSchedule()">
+                                                    <option :value="1">1st term</option>
+                                                    <option :value="2">2nd term</option>
+                                                </select>
+                                                <span class="errors-material" v-if="errors.term">{{errors.term[0]}}</span>
+                                            </div>
                                             
                                         </div>
-                                        <div class="form-group col-md-8">
-                                            <label class="control-label">ADDRESS</label>
-                                            <input class="form-control" v-model="post.address" type="text" placeholder="Address">
-                                            <span class="errors-material" v-if="errors.address">{{errors.address[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label class="control-label">EMAIL</label>
-                                            <input class="form-control" v-model="post.email"  type="text" placeholder="Email">
-                                            <span class="errors-material" v-if="errors.email">{{errors.email[0]}}</span>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label class="control-label">STUDENT TYPE</label>
-                                            <select class="form-control" v-model="post.student_type">
-                                                <option :value="1">JHS</option>
-                                                <option :value="2">SHS</option>
-                                            </select>
-                                            <span class="errors-material" v-if="errors.student_type">{{errors.student_type[0]}}</span>
-                                        </div>
+                                    
                                     </div>
-                            
+                                    <hr>
+                                    <div class="col-md-12">
+                                        <small>Subject and Scheduled</small>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>SUBJECT CODE</th>
+                                                        <th>DESCRIPTIVE TITLE</th>
+                                                        <th>UNIT</th>
+                                                        <th>TIME|DATE</th>
+                                                        <th>TEACHER</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(ls,idx) in schedules" :key="idx">
+                                                        <td>{{ ls.subjectd.subject_code }}</td>
+                                                        <td>{{ ls.subjectd.descriptive_title }}</td>
+                                                        <td>{{ ls.subjectd.unit }}</td>
+                                                        <td>{{ extractTime(ls.t_from) +" - "+ extractTime(ls.t_to)}}
+                                                            | {{ xtractDay(ls.day) }}
+                                                            
+                                                        </td>
+                                                        <td>{{ls.teacherd.last_name}}, {{ ls.teacherd.first_name }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
                                 </div>
+
+
+                               
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" @click="saveStudent()" :disabled="btndis" class="btn btn-primary">{{btncap}}</button>
+                            <button type="button" @click="enrollStudent()" :disabled="btndis" class="btn btn-primary">{{btnenroll}}</button>
                         </div>
                     </div>
                 </div>
@@ -225,6 +199,71 @@
                         <div class="modal-footer">
                             <button type="button" @click="confirmDrop()" class="btn btn-danger" >Yes</button>  
                             <button type="button" @click="cancel()" class="btn btn-secondary" >No</button>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+              <div class="modal fade accept-enroll">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6>Accept</h6>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Do you want to accept <strong>{{ post.lrn }}</strong>?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" @click="confirmAccept()" class="btn btn-info" >Yes</button>  
+                            <button type="button" @click="cancel()" class="btn btn-secondary" >No</button>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+              <div class="modal fade list-student">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6>Students</h6>
+                        </div>
+                        <div class="modal-body">
+                            <div class="table-responsive">
+                                <div class="form-group">
+                                    <input type="text" v-model="tableUser.search" @input="listOfUser()" placeholder="Search..." class="form-control">
+                                </div>
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>NAME</th>
+                                            <th>STUDENT TYPE</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(ls,idx) in users" :key="idx">
+                                            <td>
+                                               <input type="radio" v-model="post_.user" :value="ls.id" :id="'user'+ls.id" @click="filterUser(ls)" class="form-control form-control-sm">
+                                            </td>
+                                            <td>{{ ls.first_name }} {{ ls.middle_name }} {{ ls.last_name }}</td>
+                                            <td>{{ extractStudentType(ls.student_type) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" v-show="!noData(users)">
+                                            No Result Found!
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" @click="nextButton()" class="btn btn-primary">Next</button>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                          
                         </div>
                     </div>
                 </div>
@@ -287,11 +326,20 @@ export default {
             errors:[],
             post:{},
             btncap:"Save",
+            btnenroll:"Enroll",
             columns:columns,
             btndis:false,
             sortOrders:sortOrders,
             sortKey:'created_at',
+            users:[],
+            user:{},
             pass:{},
+            enroll:{},
+            post_:{},
+            tableUser:{
+                search:"",
+                length: 5
+            },
             tableData:{
                 draw:0,
                 length:10,
@@ -311,19 +359,26 @@ export default {
                 from:'',
                 to:''
             },
+            strands:[],
+            grades:[],
+            sections:[],
+            schedules:[],
+            senior:false
+
         }
     },
     methods: {
         showModal(){
             this.post = {};
-            $('.student').modal('show');
+            $('.list-student').modal('show');
         },
         deleteEnroll(data){
             this.post = data;
             $('.delete-enroll').modal('show');
         },
         cancel(){
-            $('.delete-enroll').modal('hide')
+            $('.delete-enroll').modal('hide');
+            $('.accept-enroll').modal('hide');
         },
         dropModal(data){
             this.post = data;
@@ -332,6 +387,10 @@ export default {
         enrollModal(data){
             this.post = data;
             $('.drop-enroll').modal('show');
+        },
+        acceptEnroll(data){
+            this.post = data;
+            $('.accept-enroll').modal('show');
         },
         confirmDelete(){
             this.$axios.get('sanctum/csrf-cookie').then(response=>{
@@ -358,6 +417,33 @@ export default {
                     this.errors = [];
                     this.listOfStudent();
                     $('.drop-enroll').modal('hide');
+                });
+            });
+        },
+        confirmDrop(){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                if(this.post.status == 1){
+                    this.post.status = 2
+                }else if(this.post.status == 2){
+                    this.post.status = 1;
+                }
+                this.$axios.post('api/enroll-drop/', this.post).then(res=>{
+                    this.post = {};
+                    this.$emit('show',{'message':'Enrollment has been moved to archive!'});
+                    this.errors = [];
+                    this.listOfStudent();
+                    $('.drop-enroll').modal('hide');
+                });
+            });
+        },
+         confirmAccept(){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.post('api/accept-enroll', this.post).then(res=>{
+                    this.post = {};
+                    this.$emit('show',{'message':'Enrollment has been accepted!'});
+                    this.errors = [];
+                    this.listOfStudent();
+                    $('.accept-enroll').modal('hide');
                 });
             });
         },
@@ -505,7 +591,7 @@ export default {
             }
         },
         extractStatus(num){
-            return num == 1 ? "Enrolled" : num == 2 ? "Dropped" :"";
+            return num == 0 ? "Pending": num == 1 ? "Enrolled" : num == 2 ? "Dropped" :"";
         },
         getSchoolYear(){
             this.$axios.get('sanctum/csrf-cookie').then(response=>{
@@ -516,11 +602,140 @@ export default {
         },
         viewEnroll(data){
             this.$router.push({name:'viewenrollment', params:{'id':data.id}});
-        }
+        },
+        getStrand(){
+            this.$axios.get('sanctum/csrf-cookie').then(response => {
+                this.$axios.get('api/list-strand').then(res=>{
+                    this.strands = res.data;
+                })
+            });
+        },
+        getSection(id){
+             this.$axios.get('sanctum/csrf-cookie').then(response => {
+                this.$axios.get('api/list-section/'+id).then(res=>{
+                    this.sections = res.data;
+                })
+            });
+        },
+        specifyGrade(num){
+            if(num == 1){
+                this.senior = false;
+                this.grades = [
+                    {'val':7},
+                    {'val':8},
+                    {'val':9},
+                    {'val':10},
+                    ];
+            }else if(num == 2){
+                this.senior = true;
+                this.grades = [
+                    {'val':11},
+                    {'val':12},
+                    ];
+            }
+           
+        },
+        listOfUser(){
+            this.$axios.get('sanctum/csrf-cookie').then(response => {
+                this.$axios.get('api/student-list/',{params:this.tableUser}).then(res=>{
+                    let data = res.data;
+                    this.users = data.data.data;
+                })
+            });
+        },
+        filterUser(data){
+            this.user = data;
+            this.enroll.type = data.student_type;
+            this.enroll.school_year = this.schoolyear.id;
+        },
+        nextButton(){
+            this.specifyGrade(this.user.student_type);
+            $('.list-student').modal('hide');
+            $('.enrolled').modal('show');
+        },
+        gradeLevel(num){
+            this.getSection(num);
+        },
+        getSchedule(urls='api/enroll-schedule'){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get(urls,{params:this.enroll}).then(res=>{
+                    this.schedules = res.data;
+                })
+            });
+        },
+                extractTime(time){
+          // Check correct time format and split into components
+            time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+            if (time.length > 1) { // If time format correct
+                time = time.slice (1);  // Remove full string match value
+                time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+                time[0] = +time[0] % 12 || 12; // Adjust hours
+            }
+            return time.join (''); // return adjusted time or original string
+        },
+        xtractDay(data){
+            let data_ = JSON.parse(data);
+            let txt = "";
+            data_.sort((a, b) => a - b);
+            data_.forEach(val=>{
+                if(val == 1){
+                    txt += "M";
+                }
+                if(val==2){
+                    txt += "T";
+                }
+                if(val==3){
+                    txt += "W";
+                }
+                if(val==4){
+                    txt += "TH";
+                }
+                if(val==5){
+                    txt += "F";
+                }
+                if(val==6){
+                    txt += "S";
+                }
+            });
+
+            return txt;
+        },
+
+        enrollStudent(){
+          
+            this.post_ = this.enroll;
+            this.post_.student_type = this.enroll.type;
+            this.post_.id = this.user.id;
+              console.log(this.post_);
+            this.$axios.get('sanctum/csrf-cookie').then(response => {
+                this.btnenroll = "Proccessing..."
+                // this.btndis = true;
+                this.$axios.post('api/enroll-student', this.post_).then(res=>{
+                   this.btnenroll = "Enroll";
+                   this.$emit('show',{'message':'You are enrolled!'});
+                   this.listOfStudent();
+                //    this.btndis = false;
+                   this.errors = [];
+                   this.post_ = {};
+                   this.enroll = {};
+                   this.user = {};
+                   $('.enrolled').modal('hide');
+                }).catch(err=>{
+                    this.btnenroll = "Enroll";
+                    // this.btndis = false;
+                    this.errors = err.response.data.errors
+                })
+            });
+
+        },
     },
     mounted() {
+        this.getStrand();
+        // this.getSection();
         this.listOfStudent();
         this.getSchoolYear();
+        this.listOfUser();
     },
 }
 </script>

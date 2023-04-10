@@ -496,8 +496,8 @@ export default {
             if(data.day.length > 0){
                 this.post.day = JSON.parse(data.day);                
             }
-            this.post.t_from = this.objectTime(data.t_from);
-            this.post.t_to = this.objectTime(data.t_to);
+            this.post.start_time = this.objectTime(data.start_time);
+            this.post.end_time = this.objectTime(data.end_time);
         },
         newS(){
             this.post = {

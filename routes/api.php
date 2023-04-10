@@ -70,6 +70,7 @@ Route::get('student-archive', [StudentController::class,'archiveStudent']);
 Route::resource('student', StudentController::class);
 Route::resource('jhs-grade', JHSController::class);
 Route::resource('shs-grade', SHSController::class);
+Route::post('accept-enroll', [EnrollController::class, 'acceptEnroll']);
 Route::get('enroll-auth', [EnrollController::class, 'getActiveEnrolled']);
 Route::post('enroll-drop', [EnrollController::class, 'dropEnr']);
 Route::get('enroll-history', [EnrollController::class, 'enrollmentHistory']);
@@ -82,6 +83,7 @@ Route::get('student-list', [StudentController::class, 'listOfStudent']);
 Route::get('auth-user', [AuthController::class, 'authUser']);
 Route::get('auth-year', [EnrollController::class, 'authEnrollYear']);
 Route::resource('transaction-log', TransactionController::class);
+Route::post('enroll-student', [EnrollController::class, 'studentEnroll']);
 
 
 Route::middleware('auth:sanctum')->group(function () {

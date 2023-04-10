@@ -18,7 +18,7 @@
                         <i class="">{{ school.address }}</i>
                     </div>
                     <div class="d-flex justify-content-between d-print-none">
-                        <h3 class="tile-title">Schedule ({{ schoolYearDisplay(schoolyear.description) }})</h3>
+                        <h3 class="tile-title">Schedule ({{ schoolYearDisplay(schoolyear.description) }}) </h3>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary btn-sm" @click="printReport()">
                                 <i class="fa fa-print"></i>
@@ -33,7 +33,7 @@
                     </div>
                     <hr>
                     <div class="text-center d-none d-print-block">
-                        <h4>SCHEDULE</h4>
+                        <h4>SCHEDULE</h4> 
                     </div>
                     <hr>
                     <div class="tile-body" v-if="type == 1">
@@ -63,6 +63,9 @@
                                 </div>
                                 <div class="mb-2"> TERM: 
                                      <strong> {{  extractTerm(enroll.term) }}</strong>
+                                </div>
+                                  <div class="mb-2"> STATUS: 
+                                     <strong> {{  extractStatus(enroll.status) }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -118,6 +121,7 @@
                              <div class="col-md-4 col-print-4">
                                 <div class="mb-2"> STRAND: <strong> {{ list.strand.strand_code }} ({{ list.strand.descriptive }}) </strong></div>
                                 <div class="mb-2 mt-3"> TERM: <strong> {{ extractTerm(list.term) }} </strong></div>
+                                <div class="mb-2 mt-3"> STATUS: <strong> {{ extractStatus(list.status) }} </strong></div>
                             </div>
                           
                         </div>
@@ -370,6 +374,10 @@ export default {
             const year =  d.getFullYear();
             return  month+ "-" + day  + "-" + year;
         },
+        extractStatus(num){
+            return num == 0 ? "Pending": num == 1 ? "Enrolled" : num == 2 ? "Dropped" :"";
+        },
+
 
     },
     mounted() {

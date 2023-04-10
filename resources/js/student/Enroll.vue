@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tile">
-                    <h3 class="tile-title">Enrollment ({{ schoolYearDisplay(schoolyear.description) }})</h3>
+                    <h3 class="tile-title">Enrollment ({{ schoolYearDisplay(schoolyear.description) }}) </h3>
                     <div class="alert alert-danger p-0" v-if="errors.errs">
                         <div class="alert errors-material m-0">
                             <div v-if="errors.errs"><strong>*</strong>{{errors.errs[0]}}</div>
@@ -246,8 +246,8 @@ export default {
                 })
             });
 
-        }
-
+        },
+        
     },
     mounted() {
         // console.log(window.Laravel.user)
