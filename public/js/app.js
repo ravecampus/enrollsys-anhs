@@ -25579,10 +25579,12 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
           var data = res.data;
           _this.type = data.type;
           if (data.type == 1) {
-            _this.enroll = data.enr;
-            _this.section = data.enr.sectiond;
-            _this.schedules = data.enr.ensched;
-          } else {
+            if (data.enr != null) {
+              _this.enroll = data.enr;
+              _this.section = data.enr.sectiond;
+              _this.schedules = data.enr.ensched;
+            }
+          } else if (data.type == 2) {
             _this.enrolls = data.enr;
           }
         });
@@ -26451,13 +26453,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           onClick: function onClick($event) {
             return $options.acceptEnroll(list);
           }
-        }, " Accept ", 8 /* PROPS */, _hoisted_17)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        }, " Accept ", 8 /* PROPS */, _hoisted_17)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), list.status != 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+          key: 1,
           "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-sm", list.status == 1 ? 'btn-warning' : 'btn-primary']),
           "data-toggle": "tooltip",
           onClick: function onClick($event) {
             return $options.dropModal(list);
           }
-        }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(list.status == 1 ? "Drop" : "Enroll"), 11 /* TEXT, CLASS, PROPS */, _hoisted_18), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(list.status == 1 ? "Drop" : "Enroll"), 11 /* TEXT, CLASS, PROPS */, _hoisted_18)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
           "class": "btn btn-danger btn-sm",
           "data-toggle": "tooltip",
           onClick: function onClick($event) {

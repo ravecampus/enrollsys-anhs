@@ -45,7 +45,7 @@
                                                 <button class="btn btn-info btn-sm" v-if="list.status == 0" data-toggle="tooltip" @click="acceptEnroll(list)">
                                                 Accept
                                                 </button>
-                                                <button class="btn btn-sm" :class="list.status == 1 ? 'btn-warning' :'btn-primary'" data-toggle="tooltip" @click="dropModal(list)" >
+                                                <button class="btn btn-sm" v-if="list.status != 0" :class="list.status == 1 ? 'btn-warning' :'btn-primary'" data-toggle="tooltip" @click="dropModal(list)" >
                                                 {{ list.status == 1 ? "Drop" : "Enroll" }}
                                                 </button>
                                                 <button class="btn btn-danger btn-sm" data-toggle="tooltip" @click="deleteEnroll(list)">

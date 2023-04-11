@@ -304,14 +304,19 @@ class EnrollController extends Controller
             // ->where('status', 1)
             ->where('student_type', 2)
             ->where('user_id', Auth::id())->get();
-            $type = 2;
+            $type = $enrl->student_type;
         }else{
             $enrl = Enroll::with('sectiond', 'strand','ensched')
             ->where('school_year_id', $sy->id)
-            // ->where('student_type', 1)
-            ->where('status', 1)
+            ->where('student_type', 1)
+            // ->where('status', 0)
             ->where('user_id', Auth::id())->first();
-            $type = 1;
+           
+            if(isset($enrl)){
+                $type = $enrl->student_type;
+            }else{
+                $type = 0;
+            }
         }
 
         

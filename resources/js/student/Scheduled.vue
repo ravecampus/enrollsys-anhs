@@ -207,10 +207,13 @@ export default {
                     let data = res.data;
                     this.type = data.type;
                     if(data.type == 1){
-                        this.enroll = data.enr;
-                        this.section = data.enr.sectiond;
-                        this.schedules = data.enr.ensched;
-                    }else{
+                        if(data.enr != null){
+                            this.enroll = data.enr;
+                            this.section = data.enr.sectiond;
+                            this.schedules = data.enr.ensched;
+                        }
+                      
+                    }else if(data.type == 2){
                         this.enrolls = data.enr;
                     }
                 });
