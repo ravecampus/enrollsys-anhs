@@ -69,7 +69,7 @@
                                                     <th>SUBJECT</th>
                                                     <th>1Q</th>
                                                     <th>2Q</th>
-                                                    <th>FINAL</th>
+                                                    <!-- <th>FINAL</th> -->
                                                     <th>RATING</th>
                                                 </tr>
                                             </thead>
@@ -78,7 +78,7 @@
                                                     <td>{{ ls.subjectd.descriptive_title }}</td>
                                                     <td>{{ ls.first_quarter }}</td>
                                                     <td>{{ ls.second_quarter }}</td>
-                                                    <td>{{ ls.average }}</td>
+                                                    <!-- <td>{{ ls.average }}</td> -->
                                                     <td>{{ extractRemark(ls.remark) }} </td>
                                                 </tr>
                                             </tbody>
@@ -98,7 +98,7 @@
                                                         <th>SUBJECT</th>
                                                         <th>1Q</th>
                                                         <th>2Q</th>
-                                                        <th>FINAL</th>
+                                                        <!-- <th>FINAL</th> -->
                                                         <th>RATING</th>
                                                     </tr>
                                                 </thead>
@@ -107,7 +107,7 @@
                                                         <td>{{ ls.subjectd.descriptive_title }}</td>
                                                         <td>{{ ls.first_quarter }}</td>
                                                         <td>{{ ls.second_quarter }}</td>
-                                                        <td>{{ ls.average }}</td>
+                                                        <!-- <td>{{ ls.average }}</td> -->
                                                         <td>{{ extractRemark(ls.remark) }} </td>
                                                     </tr>
                                                 </tbody>
@@ -129,7 +129,7 @@
                                                 <th>2G</th>
                                                 <th>3G</th>
                                                 <th>4G</th>
-                                                <th>FINAL</th>
+                                                <!-- <th>FINAL</th> -->
                                                 <th>RATING</th>
                                             </tr>
                                         </thead>
@@ -140,7 +140,7 @@
                                                 <td>{{ ls.second_grade }}</td>
                                                 <td>{{ ls.third_grade }}</td>
                                                 <td>{{ ls.fourth_grade }}</td>
-                                                <td>{{ ls.average }}</td>
+                                                <!-- <td>{{ ls.average }}</td> -->
                                                 <td>{{ extractRemark(ls.remark) }} </td>
                                             </tr>
                                         </tbody>

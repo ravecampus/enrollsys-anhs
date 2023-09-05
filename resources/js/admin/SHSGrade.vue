@@ -383,7 +383,12 @@ export default {
         solveGrade(){
             let num1 = this.post.first_quarter;
             let num2 = this.post.second_quarter;
-            let res = (num1+num2) / 2;
+            let res = 0;
+            if(num2 == 0){
+                res = num1;
+            }else if(num1 > 0 && num2 > 0){
+                res = (num1+num2) / 2
+            }
             this.post.average = res;
 
             if(res >= 75){

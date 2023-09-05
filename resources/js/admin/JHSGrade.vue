@@ -390,7 +390,28 @@ export default {
             let num2 = this.post.second_grade;
             let num3 = this.post.third_grade;
             let num4 = this.post.fourth_grade;
-            let res = (num1+num2+num3+num4) / 4;
+            let res = 0;
+            if(num4 == 0 && num3 == 0 && num2 == 0){
+                res = num1;
+            }else if(num4 == 0 && num3 == 0){
+                res = (num1 + num2) / 2;
+            }else if(num4 == 0){
+                res = (num1 + num2 + num3) / 3;
+            }else{
+                res = (num1 + num2 + num3 + num4) /4;
+            }
+
+            if(num1 == 0){
+                this.post.second_grade = 0;
+                this.post.third_grade = 0;
+                this.post.fourth_grade = 0;
+            }else if(num2 == 0){
+                this.post.third_grade = 0;
+                this.post.fourth_grade = 0;
+            }else if(num3 == 0){
+                  this.post.fourth_grade = 0;
+            }
+
             this.post.average = res;
 
             if(res >= 75){
