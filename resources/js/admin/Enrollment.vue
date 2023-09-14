@@ -28,8 +28,18 @@
                             <button type="button" @click="printData()" class="btn btn-outline-primary icon-btn" href=""><i class="fa fa-print"></i>Print</button></p>
                         </div>
                         <div class="row mb-3 d-print-none">
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <input type="text" v-model="tableData.search" @input="listOfStudent()" class="form-control" placeholder="Search... (Last name, First Name, Middle Name, LRN)">
+                            </div> -->
+                            <div class="col-md-6">
+                                <select class="form-control" v-model="tableData.grade" @change="listOfStudent()">
+                                    <option value="7">Grade 7</option>
+                                    <option value="8">Grade 8</option>
+                                    <option value="9">Grade 9</option>
+                                    <option value="10">Grade 10</option>
+                                    <option value="11">Grade 11</option>
+                                    <option value="12">Grade 12</option>
+                                </select>
                             </div>
                         </div>
                         <div class="tile-body">
@@ -371,6 +381,7 @@ export default {
                 archive:0,
                 dir:'desc',
                 filter:1,
+                grade:0,
             },
             pagination:{
                 lastPage:'',

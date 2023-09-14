@@ -25,6 +25,7 @@ class EnrollController extends Controller
     {
         $length = $request->length;
         $dir = $request->dir;
+        $grade = $request->grade;
         $searchValue = $request->search;
         $actyer = SchoolYear::where('is_active', 1)->first();
         $query = Enroll::with('sectiond','strand', 'sy')->select('enroll.*', 'users.first_name', 'users.last_name','users.middle_name','users.lrn')
@@ -32,6 +33,9 @@ class EnrollController extends Controller
                 ->where('enroll.school_year_id', $actyer->id)
                 ->orderBy('created_at', 'asc');
     
+        if($grade > 0){
+            $query->where('grade', $grade);
+        }
         if($searchValue){
             $query->where(function($query) use ($searchValue){
                 // $query->where('last_name', 'like', '%'.$searchValue.'%')
