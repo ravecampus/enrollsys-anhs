@@ -80,6 +80,7 @@ Route::post('users-pass', [UserController::class, 'changePassword']);
 Route::resource('users', UserController::class);
 Route::resource('class-list', ClassListController::class);
 Route::get('student-list', [StudentController::class, 'listOfStudent']);
+Route::get('list-student', [StudentController::class, 'studentList']);
 Route::get('auth-user', [AuthController::class, 'authUser']);
 Route::get('auth-year', [EnrollController::class, 'authEnrollYear']);
 Route::resource('transaction-log', TransactionController::class);

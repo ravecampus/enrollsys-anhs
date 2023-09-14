@@ -6,19 +6,34 @@
                 <!-- <p>Set up Students</p> -->
                 </div>
             </div>
+            <div class="row d-none d-print-block">
+                <div class="col-md-12">
+                    <div class="text-center">
+                        <div class="">Republic of the Philippines</div>
+                        <div class="">Department of Education</div>
+                        <i class="mb-2">{{ school.region }}</i>
+                        <h6 class="mt-2">{{ school.division }}</h6>
+                        <h5 class="mt-2">{{ school.school_name }}</h5>
+                        <i class="">{{ school.address }}</i>
+                        <div class="">S.Y. :{{ schoolYearDisplay(schoolyear.description) }}</div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="tile">
                       
-                        <div class="tile-title-w-btn" >
-                            <p><button type="button" @click="showModal()" class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add</button></p>
+                        <div class="tile-title-w-btn d-print-none" >
+                            <p><button type="button" @click="showModal()" class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add</button>
+                            <button type="button" @click="printData()" class="btn btn-outline-primary icon-btn" href=""><i class="fa fa-print"></i>Print</button></p>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3 d-print-none">
                             <div class="col-md-6">
                                 <input type="text" v-model="tableData.search" @input="listOfStudent()" class="form-control" placeholder="Search... (Last name, First Name, Middle Name, LRN)">
                             </div>
                         </div>
                         <div class="tile-body">
+                            <h4 class="d-none d-print-block">Enrollment</h4>
                             <b>List of Student </b><br>
                             <!-- <router-link :to="{name:'studentsarchive'}">Archives</router-link> -->
                             <data-table class="mt-2" :columns="columns" :sortKey="sortKey" :sortOrders="sortOrders" @sort="sortBy">
@@ -40,7 +55,7 @@
                                             {{ extractStatus(list.status) }}
                                             </strong>
                                         </td>
-                                        <td>
+                                        <td class="d-print-none">
                                             <div class="btn-group">
                                                 <button class="btn btn-info btn-sm" v-if="list.status == 0" data-toggle="tooltip" @click="acceptEnroll(list)">
                                                 Accept
@@ -58,7 +73,7 @@
                                         </td>
                                        
                                     </tr>
-                                    <tr> 
+                                    <tr class="d-print-none"> 
                                         <td colspan="4" v-show="!noData(students)">
                                             No Result Found!
                                         </td>
@@ -67,7 +82,7 @@
                                 </tbody>
                             </data-table>
                             <hr>
-                            <div class="col-md-12">
+                            <div class="col-md-12 d-print-none">
                                 <pagination :pagination="pagination"
                                     @prev="listOfStudent(pagination.prevPageUrl)"
                                     @next="listOfStudent(pagination.nextPageUrl)"
@@ -319,7 +334,7 @@ export default {
         {label:'SECTION', name:null},
         {label:'DATE', name:null},
         {label:'STATUS', name:null},
-        {label:'ACTION', name:null},
+        {label:' ', name:null},
        
         ];
         
@@ -327,6 +342,7 @@ export default {
             sortOrders[column.name] = -1;
         });
         return{
+            school:{},
             schoolyear:{},
             students:[],
             errors:[],
@@ -337,6 +353,7 @@ export default {
             btndis:false,
             sortOrders:sortOrders,
             sortKey:'created_at',
+          
             users:[],
             user:{},
             pass:{},
@@ -348,7 +365,7 @@ export default {
             },
             tableData:{
                 draw:0,
-                length:10,
+                length:1000,
                 search:'',
                 column:0,
                 archive:0,
@@ -735,9 +752,20 @@ export default {
             });
 
         },
+        printData(){
+            window.print();
+        },
+        getSchool(id){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('api/school/').then(res=>{
+                    this.school = res.data;
+                })
+            });
+        },
     },
     mounted() {
         this.getStrand();
+        this.getSchool();
         // this.getSection();
         this.listOfStudent();
         this.getSchoolYear();

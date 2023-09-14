@@ -6,6 +6,19 @@
                 <!-- <p>Set up Students</p> -->
                 </div>
             </div>
+            <div class="row d-none d-print-block">
+                <div class="col-md-12">
+                    <div class="text-center">
+                        <div class="">Republic of the Philippines</div>
+                        <div class="">Department of Education</div>
+                        <i class="mb-2">{{ school.region }}</i>
+                        <h6 class="mt-2">{{ school.division }}</h6>
+                        <h5 class="mt-2">{{ school.school_name }}</h5>
+                        <i class="">{{ school.address }}</i>
+                        <div class="">S.Y. :{{ sy }}</div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="tile">
@@ -21,7 +34,7 @@
                             <!-- <h3 class="title">All Items</h3> -->
                             <!-- <p><button type="button" @click="showModal()" class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add</button></p> -->
                         </div>
-                        <div class="col-md-3 mt-3">    
+                        <div class="col-md-3 mt-3 d-print-none">    
                             SCHOOL YEAR: 
                             <div class="input-group">
                                 <select class="form-control" v-model="tableData.school_year">
@@ -31,6 +44,10 @@
                                     <button class="btn btn-outline-primary" @click="filterYear()" type="button">
                                         <i class="fa fa-filter"></i>
                                         {{ btnload }}
+                                    </button>
+                                    <button class="btn btn-outline-primary" @click="printData()" type="button">
+                                        <i class="fa fa-print"></i>
+                                        Print
                                     </button>
                                 </div>
                             </div>
@@ -66,7 +83,7 @@
                                         </td> -->
                                        
                                     </tr>
-                                    <tr> 
+                                    <tr class="d-print-none"> 
                                         <td colspan="4" v-show="!noData(students)">
                                             No Result Found!
                                         </td>
@@ -75,7 +92,7 @@
                                 </tbody>
                             </data-table>
                             <hr>
-                            <div class="col-md-12">
+                            <div class="col-md-12 d-print-none">
                                 <pagination :pagination="pagination"
                                     @prev="listOfStudent(pagination.prevPageUrl)"
                                     @next="listOfStudent(pagination.nextPageUrl)"
@@ -148,6 +165,8 @@ export default {
             sortOrders:sortOrders,
             sortKey:'created_at',
             pass:{},
+            school:{},
+            sy:"",
             tableData:{
                 draw:0,
                 length:1000,
@@ -349,6 +368,7 @@ export default {
         schoolYearDisplay(data){
             let num = Number(data) + 1;
             if(data != null){
+                this.sy = data+ " - "+ num;
                 return data+ " - "+ num;
             }
         },
@@ -364,11 +384,22 @@ export default {
         },
         filterYear(){
             this.listOfStudent();
-        }
+        },
+        printData(){
+            window.print();
+        },
+        getSchool(id){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('api/school/').then(res=>{
+                    this.school = res.data;
+                })
+            });
+        },
     },
     mounted() {
         // this.listOfStudent();
         this.getSchoolYear();
+        this.getSchool();
     },
 }
 </script>

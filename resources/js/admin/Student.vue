@@ -6,7 +6,61 @@
                 <!-- <p>Set up Students</p> -->
                 </div>
             </div>
-            <div class="row">
+            <div class="row d-none d-print-block">
+                <div class="col-md-12">
+                    <div class="text-center">
+                        <div class="">Republic of the Philippines</div>
+                        <div class="">Department of Education</div>
+                        <i class="mb-2">{{ school.region }}</i>
+                        <h6 class="mt-2">{{ school.division }}</h6>
+                        <h5 class="mt-2">{{ school.school_name }}</h5>
+                        <i class="">{{ school.address }}</i>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>LRN #</th>
+                                <th>LASTNAME</th>
+                                <th>FIRSTNAME</th>
+                                <th>MIDDLENAME</th>
+                                <th>STUDENT TYPE</th>
+                                <th>AGE</th>
+                                <th>BIRTHDATE</th>
+                                <th>BIRTH PLACE</th>
+                                <th>GENDER</th>
+                                <th>CIVIL STATUS</th>
+                                <th>CITIZENSHIP</th>
+                                <th>RELIGION</th>
+                                <th>ADDRESS</th>
+                                <th>CONTACT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="tr-shadow" v-for="(list, idx) in list_students" :key="idx">
+                                <td><strong class="text-success">{{ list.lrn }}</strong></td>
+                                <td class="desc">{{ list.last_name }}</td>
+                                <td class="desc">{{ list.first_name }}</td>
+                                <td class="desc">{{ list.middle_name }}</td>
+                                <td class="desc">{{ extractStudentType(list.student_type) }}</td>
+                                <td class="desc">{{ list.age }}</td>
+                                <td class="desc">{{ formatDate(list.birthdate) }}</td>
+                                <td class="desc">{{ list.birth_place }}</td>
+                                <td class="desc">{{ extractGender(list.gender) }}</td>
+                                <td class="desc">{{ extractCS(list.civil_status) }}</td>
+                                <td class="desc">{{ extractCZ(list.citizenship) }}</td>
+                                <td class="desc">{{ list.religion }}</td>
+                                <td class="desc">{{ list.address}}</td>
+                                <td class="desc">{{ list.contact}}</td>
+                               
+                            </tr>
+                            <tr class="spacer"></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row d-print-none">
                 <div class="col-md-12">
                     <div class="tile">
                         <!-- <div class="overlay" v-if="teachers.length == 0">
@@ -19,7 +73,9 @@
                         </div> -->
                         <div class="tile-title-w-btn" >
                             <h3 class="title">All Items</h3>
-                            <p><button type="button" @click="showModal()" class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add</button></p>
+                            <p class="btn-group">
+                                <button type="button" @click="showModal()" class="btn btn-primary icon-btn" href=""><i class="fa fa-plus"></i>Add</button>
+                            <button type="button" @click="printData()" class="btn btn-outline-primary icon-btn"><i class="fa fa-print"></i>Print</button></p>
                         </div>
                         <div class="row mb-4">
                             <div class="col-md-6">
@@ -311,7 +367,9 @@ export default {
             btndis:false,
             sortOrders:sortOrders,
             sortKey:'created_at',
+            list_students:[],
             pass:{},
+            school:{},
             tableData:{
                 draw:0,
                 length:10,
@@ -499,15 +557,35 @@ export default {
         },
         viewStudent(list){
             this.$router.push({name:'viewstudent', params:{'id':list.id}});
-        }
+        },
+        printData(){
+            window.print();
+        },
+        listStudent(){
+             this.$axios.get('sanctum/csrf-cookie').then(response => {
+                this.$axios.get('api/list-student').then(res=>{
+                    this.list_students = res.data;
+                }).catch(err=>{
+                
+                });
+            });
+        },
+        getSchool(id){
+            this.$axios.get('sanctum/csrf-cookie').then(response=>{
+                this.$axios.get('api/school/').then(res=>{
+                    this.school = res.data;
+                })
+            });
+        },
     },
     mounted() {
         this.listOfStudent();
+        this.listStudent();
+        this.getSchool();
     },
 }
 </script>
 
-<style>
-
+<style type="text/css" media="print">
+  @page { size: landscape; }
 </style>
-     
